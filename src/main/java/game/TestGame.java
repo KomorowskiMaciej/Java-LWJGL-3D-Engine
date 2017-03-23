@@ -124,12 +124,9 @@ public class TestGame extends Game {
 
         //sun
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
-        //setWaterTile(new WaterTile(400,400,-10));
 
-        //lamplights
-//        setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
-//        setLight(new Light(new Vector3f(400,4.2f,-400),new Vector3f(0,2,2),new Vector3f(1,0.01f,0.002f)));
-//        setLight(new Light(new Vector3f(400,-6.8f,-400),new Vector3f(2,2,0),new Vector3f(1,0.01f,0.002f)));
+        // redlight
+        setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
 
 
         GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));

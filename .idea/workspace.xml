@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28826eee-289f-46c8-8720-794c995133c8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fontFragment.glsl" afterPath="$PROJECT_DIR$/res/shaders/fontFragment.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fontVertex.glsl" afterPath="$PROJECT_DIR$/res/shaders/fontVertex.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/fragmentShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/guiFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/guiFragmentShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/guiVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/guiVertexShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/shadowFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/shadowFragmentShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/shadowVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/shadowVertexShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/skyboxFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/skyboxFragmentShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/skyboxVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/skyboxVertexShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/terrainFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/terrainFragmentShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/terrainVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/terrainVertexShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/vertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/vertexShader.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/waterFragment.glsl" afterPath="$PROJECT_DIR$/res/shaders/waterFragment.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/waterVertex.glsl" afterPath="$PROJECT_DIR$/res/shaders/waterVertex.glsl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/base/CoreEngine.java" afterPath="$PROJECT_DIR$/src/main/java/engine/base/CoreEngine.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/modules/gameObject/gameObjectComponents/FirstPersonCamera.java" afterPath="$PROJECT_DIR$/src/main/java/engine/modules/gameObject/gameObjectComponents/FirstPersonCamera.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java" afterPath="$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/settings/Config.java" afterPath="$PROJECT_DIR$/src/main/java/engine/settings/Config.java" />
+    <list default="true" id="28826eee-289f-46c8-8720-794c995133c8" name="Default" comment="refactor">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/game/TestGame.java" afterPath="$PROJECT_DIR$/src/main/java/game/TestGame.java" />
     </list>
     <ignored path="MacEngine.iws" />
@@ -47,8 +28,8 @@
       <file leaf-file-name="TestGame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/game/TestGame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="140" column="0" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
+            <state relative-caret-position="68">
+              <caret line="42" column="49" selection-start-line="42" selection-start-column="49" selection-end-line="42" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -742,7 +723,7 @@
       <workItem from="1490281915135" duration="2122000" />
       <workItem from="1490284048961" duration="390000" />
       <workItem from="1490284450386" duration="6119000" />
-      <workItem from="1490290753289" duration="469000" />
+      <workItem from="1490290753289" duration="1328000" />
     </task>
     <task id="LOCAL-00001" summary="characterMov">
       <created>1468400855863</created>
@@ -755,7 +736,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140052000" />
+    <option name="totallyTimeSpent" value="140911000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -763,7 +744,7 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43446088" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29492602" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -814,7 +795,8 @@
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <MESSAGE value="characterMov" />
-    <option name="LAST_COMMIT_MESSAGE" value="characterMov" />
+    <MESSAGE value="refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1245,8 +1227,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/game/TestGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="140" column="0" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
+        <state relative-caret-position="68">
+          <caret line="42" column="49" selection-start-line="42" selection-start-column="49" selection-end-line="42" selection-end-column="49" />
           <folding />
         </state>
       </provider>

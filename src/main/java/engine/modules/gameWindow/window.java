@@ -1,15 +1,11 @@
 package engine.modules.gameWindow;
 
+import engine.settings.Config;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 
 public class window {
-
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
-    private static final int FPS_CAP = 120;
-
     private static long lastFrameTime;
     private static float delta;
 
@@ -19,20 +15,20 @@ public class window {
                 .withProfileCore(true);
 
         try {
-            Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+            Display.setDisplayMode(new DisplayMode(Config.getWindowWidth(), Config.getWindowHeight()));
             Display.create(new PixelFormat(), attribs);
-            Display.setTitle("Our First Display!");
+            Display.setTitle(Config.getGameTitle());
         } catch (LWJGLException e) {
             e.printStackTrace();
         }
 
-        GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        GL11.glViewport(0, 0, Config.getWindowWidth(), Config.getWindowHeight());
         lastFrameTime = getCurrentTime();
     }
 
     public static void updateDisplay() {
 
-        Display.sync(FPS_CAP);
+        Display.sync(Config.getFpsCap());
         Display.update();
         long currentFrameTime = getCurrentTime();
         delta = (currentFrameTime - lastFrameTime) / 1000f;

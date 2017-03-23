@@ -36,6 +36,10 @@ public class TestGame extends Game {
         TerrainTexture blendMap = new TerrainTexture(Loader.getInstance().loadTexture("blendMap"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backTerrainTexture, rTexture, gTexture, bTexture);
 
+
+        // TERRAIN
+
+
         GameObject terrainObj = new GameObject();
         TerrainRendererComponent terrain = new TerrainRendererComponent(terrainObj, 0, 0, texturePack, blendMap);
         terrainObj.AddComponent(terrain);
@@ -103,13 +107,18 @@ public class TestGame extends Game {
         }
 
 
-        Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
+        // PLAYER
 
+        Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
         GameObject player = new GameObject(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), new Vector3f(5, 5, 5));
         player.AddComponent(new MeshRendererComponent(playerModel, 0));
+
+
+
         PhysicsComponent playerphysics = new PhysicsComponent();
         player.AddComponent(playerphysics);
         player.AddComponent(new PlayerBaseComponent(playerphysics));
+
         gameObjects.add(player);
 
 
@@ -124,7 +133,7 @@ public class TestGame extends Game {
 
 
         GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
-        setCamera(new ThirdPersonCamera(player));
+        setCamera(new FirstPersonCamera(player));
         cameraObj.AddComponent(getCamera());
         gameObjects.add(cameraObj);
 

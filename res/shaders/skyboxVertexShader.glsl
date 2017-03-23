@@ -1,4 +1,4 @@
-#version 140
+#version 400
 
 in vec3 position;
 out vec3 textureCoords;

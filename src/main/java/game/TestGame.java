@@ -36,6 +36,10 @@ public class TestGame extends Game {
         TerrainTexture blendMap = new TerrainTexture(Loader.getInstance().loadTexture("blendMap"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backTerrainTexture, rTexture, gTexture, bTexture);
 
+
+        // TERRAIN
+
+
         GameObject terrainObj = new GameObject();
         TerrainRendererComponent terrain = new TerrainRendererComponent(terrainObj, 0, 0, texturePack, blendMap);
         terrainObj.AddComponent(terrain);
@@ -103,28 +107,30 @@ public class TestGame extends Game {
         }
 
 
-        Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
+        // PLAYER
 
+        Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
         GameObject player = new GameObject(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), new Vector3f(5, 5, 5));
         player.AddComponent(new MeshRendererComponent(playerModel, 0));
+
+
+
         PhysicsComponent playerphysics = new PhysicsComponent();
         player.AddComponent(playerphysics);
         player.AddComponent(new PlayerBaseComponent(playerphysics));
+
         gameObjects.add(player);
 
 
         //sun
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
-        //setWaterTile(new WaterTile(400,400,-10));
 
-        //lamplights
-//        setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
-//        setLight(new Light(new Vector3f(400,4.2f,-400),new Vector3f(0,2,2),new Vector3f(1,0.01f,0.002f)));
-//        setLight(new Light(new Vector3f(400,-6.8f,-400),new Vector3f(2,2,0),new Vector3f(1,0.01f,0.002f)));
+        // redlight
+        setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
 
 
         GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
-        setCamera(new ThirdPersonCamera(player));
+        setCamera(new FirstPersonCamera(player));
         cameraObj.AddComponent(getCamera());
         gameObjects.add(cameraObj);
 

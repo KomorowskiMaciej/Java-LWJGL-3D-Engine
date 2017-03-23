@@ -27,20 +27,25 @@ public class CoreEngine {
         while (!Display.isCloseRequested()) {
             m_game.input();
 
-            for (GameObject gameObject : m_game.getGameObjectList()) {
+            // UPDATES
+
+            for (GameObject gameObject : m_game.getGameObjectList())
                 gameObject.Input();
-            }
             m_game.update();
-            for (GameObject gameObject : m_game.getGameObjectList()) {
+
+            for (GameObject gameObject : m_game.getGameObjectList())
                 gameObject.Update();
-            }
+
             picker.update();
 
-            for (GameObject gameObject : m_game.getGameObjectList()) {
-                gameObject.Render();
-            }
 
+            // RENDER
+
+            for (GameObject gameObject : m_game.getGameObjectList())
+                gameObject.Render();
             renderer.render(m_game.getLights(), m_game.getWaters(), m_game.getGuiTextures());
+
+
             window.updateDisplay();
         }
 

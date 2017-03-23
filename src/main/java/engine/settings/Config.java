@@ -9,7 +9,16 @@ import org.lwjgl.util.vector.Vector4f;
 public class Config {
 
 
+
+    private static final String GAME_TITLE = "Test game";
     private static final String RES_PATH = "res/";
+
+
+    private static final int WINDOW_WIDTH = 1280;
+    private static final int WINDOW_HEIGHT = 720;
+
+
+    private static final int FPS_CAP = 120;
 
     private static final float FOV = 70;                                                                                  // Angle of camera view
     private static final float NEAR_PLANE = 0.1f;                                                                         // Near culling plane
@@ -121,4 +130,17 @@ public class Config {
     public static String getResPath() {
         return RES_PATH;
     }
+    public static int getWindowWidth() {
+        return WINDOW_WIDTH;
+    }
+    public static int getWindowHeight() {
+        return WINDOW_HEIGHT;
+    }
+    public static String getGameTitle() {
+        return GAME_TITLE;
+    }
+    public static int getFpsCap() {
+        return FPS_CAP;
+    }
+
 }

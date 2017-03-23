@@ -2,7 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="28826eee-289f-46c8-8720-794c995133c8" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/markdown-navigator/profiles_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/preferred-vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fontFragment.glsl" afterPath="$PROJECT_DIR$/res/shaders/fontFragment.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fontVertex.glsl" afterPath="$PROJECT_DIR$/res/shaders/fontVertex.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/fragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/fragmentShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/guiFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/guiFragmentShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/guiVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/guiVertexShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/shadowFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/shadowFragmentShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/shadowVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/shadowVertexShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/skyboxFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/skyboxFragmentShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/skyboxVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/skyboxVertexShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/terrainFragmentShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/terrainFragmentShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/terrainVertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/terrainVertexShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/vertexShader.glsl" afterPath="$PROJECT_DIR$/res/shaders/vertexShader.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/waterFragment.glsl" afterPath="$PROJECT_DIR$/res/shaders/waterFragment.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/shaders/waterVertex.glsl" afterPath="$PROJECT_DIR$/res/shaders/waterVertex.glsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/base/CoreEngine.java" afterPath="$PROJECT_DIR$/src/main/java/engine/base/CoreEngine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/modules/gameObject/gameObjectComponents/FirstPersonCamera.java" afterPath="$PROJECT_DIR$/src/main/java/engine/modules/gameObject/gameObjectComponents/FirstPersonCamera.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java" afterPath="$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/engine/settings/Config.java" afterPath="$PROJECT_DIR$/src/main/java/engine/settings/Config.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/game/TestGame.java" afterPath="$PROJECT_DIR$/src/main/java/game/TestGame.java" />
     </list>
     <ignored path="MacEngine.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,10 +60,15 @@
       <file leaf-file-name="window.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+            <state relative-caret-position="175">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <marker date="1490293885053" expanded="true" signature="949:1135" ph="{...}" />
+                <marker date="1490293885053" expanded="false" signature="1175:1186" ph=" { " />
+                <marker date="1490293885053" expanded="false" signature="1199:1205" ph=" }" />
+                <marker date="1490293885053" expanded="true" signature="1245:1281" ph="{...}" />
+                <marker date="1490293885053" expanded="false" signature="1323:1334" ph=" { " />
+                <marker date="1490293885053" expanded="false" signature="1389:1395" ph=" }" />
               </folding>
             </state>
           </provider>
@@ -57,11 +84,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+            <state relative-caret-position="366">
+              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="256">
+              <caret line="215" column="20" lean-forward="false" selection-start-line="215" selection-start-column="20" selection-end-line="215" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -129,6 +166,11 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>HEAD</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -390,6 +432,61 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <method />
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
@@ -473,6 +570,22 @@
       <option name="trusted" value="true" />
       <method />
     </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -512,6 +625,19 @@
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
+      <node-interpreter value="project" />
+      <working-dir value="" />
+      <envs />
+      <scope-kind value="ALL" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
       <envs />
       <method />
     </configuration>
@@ -720,7 +846,7 @@
       <workItem from="1490281915135" duration="2122000" />
       <workItem from="1490284048961" duration="390000" />
       <workItem from="1490284450386" duration="1862000" />
-      <workItem from="1490293133803" duration="698000" />
+      <workItem from="1490293133803" duration="767000" />
     </task>
     <task id="LOCAL-00001" summary="characterMov">
       <created>1468400855863</created>
@@ -733,7 +859,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136024000" />
+    <option name="totallyTimeSpent" value="136093000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1149,20 +1275,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/engine/modules/gameWindow/window.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+        <state relative-caret-position="175">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <marker date="1490293885053" expanded="true" signature="949:1135" ph="{...}" />
+            <marker date="1490293885053" expanded="false" signature="1175:1186" ph=" { " />
+            <marker date="1490293885053" expanded="false" signature="1199:1205" ph=" }" />
+            <marker date="1490293885053" expanded="true" signature="1245:1281" ph="{...}" />
+            <marker date="1490293885053" expanded="false" signature="1323:1334" ph=" { " />
+            <marker date="1490293885053" expanded="false" signature="1389:1395" ph=" }" />
           </folding>
         </state>
       </provider>
@@ -1177,8 +1300,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+        <state relative-caret-position="366">
+          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="215" column="20" lean-forward="false" selection-start-line="215" selection-start-column="20" selection-end-line="215" selection-end-column="20" />
           <folding />
         </state>
       </provider>

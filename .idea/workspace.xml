@@ -2,99 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="28826eee-289f-46c8-8720-794c995133c8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/libjinput-linux.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/libjinput-linux64.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/liblwjgl.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/liblwjgl64.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/libopenal.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/linux/libopenal64.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/macosx/libjinput-osx.dylib" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/macosx/liblwjgl.dylib" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/macosx/openal.dylib" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/solaris/liblwjgl.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/solaris/liblwjgl64.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/solaris/libopenal.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/solaris/libopenal64.so" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/OpenAL32.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/OpenAL64.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/jinput-dx8.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/jinput-dx8_64.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/jinput-raw.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/jinput-raw_64.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/lwjgl.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/example-libs/windows/lwjgl64.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jars/PNGDecoder.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jars/lwjgl.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jars/lwjgl_util.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jars/slick-util.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/base/CoreEngine.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/base/Game.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/base/MasterRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/base/ShaderProgram.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/Character.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/FontType.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/GUIText.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/Line.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/MetaFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/TextMeshCreator.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/TextMeshData.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontMeshCreator/Word.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontRendering/FontRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontRendering/FontShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/fonts/fontRendering/TextMaster.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/GameObject.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/GameObjectsRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/CameraBaseComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/FirstPersonCamera.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/GameObjectComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/MeshRendererComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/PhysicsComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/PlayerBaseComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/TerrainRendererComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectComponents/ThirdPersonCamera.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameObject/gameObjectShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/gameWindow/window.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/guis/GuiRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/guis/GuiShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/guis/GuiTexture.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/input/Input.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/input/MousePicker.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/light/Light.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/Loader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/OBJLoader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/Mesh.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/Model.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/ModelData.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/TerrainTexture.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/TerrainTexturePack.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/Texture.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/TextureData.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/resourceMenegment/containers/Vertex.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/shadows/ShadowBox.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/shadows/ShadowFrameBuffer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/shadows/ShadowMapEntityRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/shadows/ShadowMapMasterRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/shadows/ShadowShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/skybox/SkyboxRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/skybox/SkyboxShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/terrain/TerrainRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/terrain/TerrainShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/water/WaterFrameBuffers.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/water/WaterRenderer.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/water/WaterShader.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/modules/water/WaterTile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/settings/Config.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/toolbox/Maths.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/toolbox/Picker3D.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/engine/toolbox/Utils.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/game/Main.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/game/TestGame.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/game/todoFile" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MacEngine.iml" afterPath="$PROJECT_DIR$/MacEngine.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <ignored path="MacEngine.iws" />
@@ -118,11 +25,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="439">
               <caret line="45" column="13" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -335,6 +252,10 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="Java-LWJGL-3D-Engine" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -855,7 +776,7 @@
       <workItem from="1490266678924" duration="3634000" />
       <workItem from="1490281915135" duration="2122000" />
       <workItem from="1490284048961" duration="390000" />
-      <workItem from="1490284450386" duration="1557000" />
+      <workItem from="1490284450386" duration="1862000" />
     </task>
     <task id="LOCAL-00001" summary="characterMov">
       <created>1468400855863</created>
@@ -868,11 +789,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135021000" />
+    <option name="totallyTimeSpent" value="135326000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -937,13 +858,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/engine/modules/fonts/fontMeshCreator/GUIText.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/engine/modules/fonts/fontMeshCreator/Line.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -1357,6 +1271,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="439">
           <caret line="45" column="13" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>

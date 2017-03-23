@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lwjgl-2.9.3/jar/lwjgl.jar!/" />
+          <root url="jar://$MODULE_DIR$/jars/lwjgl.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lwjgl-2.9.3/jar/lwjgl_util.jar!/" />
+          <root url="jar://$MODULE_DIR$/jars/lwjgl_util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -28,7 +28,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lwjgl-2.9.3/slick-util.jar!/" />
+          <root url="jar://$MODULE_DIR$/jars/PNGDecoder.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -37,7 +37,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lwjgl-2.9.3/PNGDecoder.jar!/" />
+          <root url="jar://$MODULE_DIR$/jars/slick-util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

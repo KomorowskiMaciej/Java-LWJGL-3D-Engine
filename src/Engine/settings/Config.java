@@ -11,7 +11,7 @@ public class Config {
 
 
 
-    private static final String  RES_PATH = "/home/mac/Desktop/macEngine/macenginejava/res/";
+    private static final String  RES_PATH = "res/";
 
     private static final float FOV = 70;                                                                                  // Angle of camera view
     private static final float NEAR_PLANE = 0.1f;                                                                         // Near culling plane

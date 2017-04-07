@@ -42,18 +42,9 @@ public class Main {
         if (jgllib != null)
             System.setProperty("org.lwjgl.librarypath", jgllib.getAbsolutePath());
 
-        try {
-            Socket socket = new Socket("localhost", 1234);
-            if (socket.isConnected()) {
-                new Thread(new ReceiverThread(socket)).start();
 
-                Sender.init(socket);
-                Sender.send(Constants.OpCode.LOGIN);
 
-                new CoreEngine(new TestGame()); // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new CoreEngine(new TestGame()); // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
+
     }
 }

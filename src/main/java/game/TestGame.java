@@ -9,10 +9,14 @@ import engine.modules.resourceMenegment.OBJLoader;
 import engine.modules.resourceMenegment.containers.*;
 import engine.network.EventQueue;
 import engine.network.NetworkEvent;
+import engine.network.ReceiverThread;
 import engine.network.Sender;
 import org.lwjgl.util.vector.Vector3f;
+import server.Constants;
 import server.UserState;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -21,9 +25,8 @@ import java.util.Random;
  */
 public class TestGame extends Game {
 
-    Model playerModel = null;
     private HashMap<String, GameObject> players = new HashMap<>();
-    private UserState userState;
+    Model playerModel = null;
     private GameObject player = null;
 
 
@@ -54,6 +57,9 @@ public class TestGame extends Game {
 
 
     private void updateMultiplayer(){
+
+
+        // WYKONYWANIE POLECEN SERWERA
         while (EventQueue.queue.size() > 0) {
             NetworkEvent event = EventQueue.queue.poll();
 
@@ -76,10 +82,18 @@ public class TestGame extends Game {
             }
         }
 
-        if (userState != null) {
-            userState.setPosition(player.getPosition());
-            Sender.send(NetworkEvent.PLAYER_MOVE, userState);
-        }
+        // WYSYLANIE INFO DO SERWERA
+        UserState userState = new UserState();
+
+        userState.setPosition(player.getPosition());
+        userState.setRotation(player.getRotation());
+
+        PlayerBaseComponent baseComponent = player.getComponent(PlayerBaseComponent.class);
+        if(baseComponent == null)
+            throw new IllegalStateException("Player base component == null during sending data to server.");
+        userState.setHp(baseComponent.getHp());
+
+        Sender.send(NetworkEvent.PLAYER_MOVE, userState);
     }
 
 
@@ -130,7 +144,19 @@ public class TestGame extends Game {
 
 
     private void setUpMultiplayer(){
-        isMultiplayer = true;
+        try {
+            Socket socket = new Socket("localhost", 1234);
+            if (socket.isConnected()) {
+                new Thread(new ReceiverThread(socket)).start();
+
+                Sender.init(socket);
+                Sender.send(Constants.OpCode.LOGIN);
+                isMultiplayer = true;
+            }
+        } catch (IOException e) {
+            System.out.println("Cannot connect to the server - offline mode.");
+        }
+
     }
 
     private void setUpModelsAndTextures(){

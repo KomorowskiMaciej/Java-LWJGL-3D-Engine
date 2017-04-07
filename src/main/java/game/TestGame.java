@@ -21,175 +21,54 @@ import java.util.Random;
  */
 public class TestGame extends Game {
 
-    GameObject targetObject = null;
     Model playerModel = null;
     private HashMap<String, GameObject> players = new HashMap<>();
     private UserState userState;
     private GameObject player = null;
 
+
+    private boolean isMultiplayer = false;
+
+
+
+
     public void init() {
-
-
-        /*
-            load models and textures
-         */
-
-        playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
-
-        /*
-        *
-        * terrain generation
-        *
-        * */
-
-
-        TerrainTexture backTerrainTexture = new TerrainTexture(Loader.getInstance().loadTexture("grassy"));
-        TerrainTexture rTexture = new TerrainTexture(Loader.getInstance().loadTexture("dirt"));
-        TerrainTexture gTexture = new TerrainTexture(Loader.getInstance().loadTexture("pinkFlowers"));
-        TerrainTexture bTexture = new TerrainTexture(Loader.getInstance().loadTexture("path"));
-        TerrainTexture blendMap = new TerrainTexture(Loader.getInstance().loadTexture("blendMap"));
-        TerrainTexturePack texturePack = new TerrainTexturePack(backTerrainTexture, rTexture, gTexture, bTexture);
-
+        // LOAD MODELS, TEXTURES, ETC.
+        setUpModelsAndTextures();
         // TERRAIN
-
-
-        GameObject terrainObj = new GameObject();
-        TerrainRendererComponent terrain = new TerrainRendererComponent(terrainObj, 0, 0, texturePack, blendMap);
-        terrainObj.AddComponent(terrain);
-        setTerrain(terrain);
-        gameObjects.add(terrainObj);
-
-
-        /*
-        *
-        * object generation
-        *
-        * */
-
-
-        Random random = new Random();
-        Mesh tmpMesh = OBJLoader.loadOBJ("tree");
-        Model tmp = new Model(tmpMesh, new Texture(Loader.getInstance().loadTexture("tree")));
-
-        for (int i = 0; i < 500; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            float randomSize = random.nextFloat() * 4 + 2;
-            gameObjects.add(new GameObject(position, new Vector3f(0, 0, 0), new Vector3f(randomSize, randomSize, randomSize)).AddComponent(new MeshRendererComponent(tmp, 0)));
-        }
-
-
-        tmpMesh = OBJLoader.loadOBJ("lowPolyTree");
-        tmp = new Model(tmpMesh, new Texture(Loader.getInstance().loadTexture("lowPolyTree")));
-
-        for (int i = 0; i < 500; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            float randomSize = random.nextFloat() * 1 + 1;
-            gameObjects.add(new GameObject(position, new Vector3f(0, 0, 0), new Vector3f(randomSize, randomSize, randomSize)).AddComponent(new MeshRendererComponent(tmp, 0)));
-        }
-
-        tmpMesh = OBJLoader.loadOBJ("fern");
-        tmp = new Model(tmpMesh, new Texture(Loader.getInstance().loadTexture("fern")).setHasTransparency(true), 2);
-
-        for (int i = 0; i < 500; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            gameObjects.add(new GameObject(position, new Vector3f(0, 0, 0)).AddComponent(new MeshRendererComponent(tmp, 1)));
-        }
-        for (int i = 0; i < 500; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            gameObjects.add(new GameObject(position, new Vector3f(0, 0, 0)).AddComponent(new MeshRendererComponent(tmp, 3)));
-        }
-        for (int i = 0; i < 500; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            gameObjects.add(new GameObject(position, new Vector3f(0, 0, 0)).AddComponent(new MeshRendererComponent(tmp, 4)));
-        }
-
-        tmpMesh = OBJLoader.loadOBJ("boulder");
-        tmp = new Model(tmpMesh, new Texture(Loader.getInstance().loadTexture("boulder")), 1);
-        for (int i = 0; i < 100; i++) {
-            Vector3f position = new Vector3f(random.nextFloat() * 800, 0, random.nextFloat() * 800);
-            position.y = GetTerrain().getHeightOfTerrain(position.x, position.z);
-            gameObjects.add(new GameObject(position,
-                    new Vector3f(random.nextFloat() * 360, random.nextFloat() * 360, random.nextFloat() * 360),
-                    new Vector3f(random.nextFloat() * 0.5f + 0.5f, random.nextFloat() * 0.5f + 0.5f, random.nextFloat() * 0.5f + 0.5f)
-            ).AddComponent(new MeshRendererComponent(tmp, 0)));
-        }
-
-
-        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
-        setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
-
-
+        setUpTerrain();
+        // LIGHTS
+        setUpLights();
         // PLAYER
-
-        player = createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
-
-
-
+        createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
         // CAMERA
-        GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
-        setCamera(new FirstPersonCamera(player));
-        cameraObj.AddComponent(getCamera());
-        gameObjects.add(cameraObj);
-
-    }
-
-    public GameObject createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
-        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
-        PhysicsComponent physicsComponent = new PhysicsComponent();
-        player.AddComponent(physicsComponent);
-        if (renderMesh)
-            player.AddComponent(new MeshRendererComponent(playerModel, 0));
-        gameObjects.add(player);
-
-        player.AddComponent(new PlayerBaseComponent(physicsComponent));
-
-        return player;
-    }
-
-    public GameObject createMultiPlayer(Vector3f position, Vector3f rotation, String name) {
-        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
-        player.AddComponent(new MeshRendererComponent(playerModel, 0));
-        gameObjects.add(player);
-        return player;
-    }
-
-    public void updateMultiPlayer(GameObject player, Vector3f position, Vector3f rotation) {
-        player.setPosition(position);
-        player.setRotation(rotation);
-    }
-
-    public void deleteMultiPlayer(GameObject player) {
-        gameObjects.remove(player);
+        setUpCamera();
+        // MULTIPLAYER
+        setUpMultiplayer();
     }
 
     public void update() {
+        if(isMultiplayer)
+            updateMultiplayer();
+    }
+
+
+    private void updateMultiplayer(){
         while (EventQueue.queue.size() > 0) {
             NetworkEvent event = EventQueue.queue.poll();
 
             switch (event.Type) {
                 case NetworkEvent.LOGIN: {
-                    userState = (UserState) event.Data;
-
-                    player.setPosition(userState.getPosition());
+                    setPlayerStartStates((UserState) event.Data);
                     break;
                 }
-
                 case NetworkEvent.PLAYER_MOVE: {
                     UserState state = (UserState) event.Data;
 
                     if (players.containsKey(state.getUserID())) {
-                        GameObject p = players.get(state.getUserID());
-                        p.setPosition(state.getPosition());
-                        PlayerBaseComponent c = p.getComponent(PlayerBaseComponent.class);
-                        assert c != null;
-                        c.setHp(state.getHp());
+                        updateExternalPlayer(state);
                     } else {
-                        GameObject p = createMultiPlayer(state.getPosition(), new Vector3f(0, 0, 0), state.getUserID());
+                        GameObject p = createExternalPlayer(state.getPosition(), state.getRotation());
                         players.put(state.getUserID(), p);
                     }
                     break;
@@ -201,5 +80,94 @@ public class TestGame extends Game {
             userState.setPosition(player.getPosition());
             Sender.send(NetworkEvent.PLAYER_MOVE, userState);
         }
+    }
+
+
+    public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {
+        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
+        player.AddComponent(new MeshRendererComponent(playerModel, 0));
+        gameObjects.add(player);
+        return player;
+    }
+
+
+    public void setPlayerStartStates(UserState state){
+
+        if(state.getPosition() == null || state.getRotation() == null)
+            throw new IllegalStateException("UserState can't passes nulls.");
+
+        player.setPosition(state.getPosition());
+        player.setRotation(state.getRotation());
+
+        PlayerBaseComponent c = player.getComponent(PlayerBaseComponent.class);
+        if(c == null)
+            throw new IllegalStateException("PlayerBaseComponent hasnt found in player object");
+        c.setHp(state.getHp());
+    }
+
+
+    public void updateExternalPlayer(UserState state) {
+
+        // walidacja
+
+        if(state.getPosition() == null || state.getRotation() == null)
+            throw new IllegalStateException("UserState can't passes nulls.");
+
+        GameObject p = players.get(state.getUserID());
+            if(p == null)
+                throw new IllegalStateException("State.UserId doesnt match to any player.");
+
+        p.setPosition(state.getPosition());
+        PlayerBaseComponent c = p.getComponent(PlayerBaseComponent.class);
+        assert c != null;
+        c.setHp(state.getHp());
+    }
+
+    public void deleteExternalPlayer(GameObject player) {
+        gameObjects.remove(player);
+    }
+
+
+
+    private void setUpMultiplayer(){
+        isMultiplayer = true;
+    }
+
+    private void setUpModelsAndTextures(){
+        playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
+    }
+    private void setUpTerrain (){
+
+        TerrainTexture backTerrainTexture = new TerrainTexture(Loader.getInstance().loadTexture("grassy"));
+        TerrainTexture rTexture = new TerrainTexture(Loader.getInstance().loadTexture("dirt"));
+        TerrainTexture gTexture = new TerrainTexture(Loader.getInstance().loadTexture("pinkFlowers"));
+        TerrainTexture bTexture = new TerrainTexture(Loader.getInstance().loadTexture("path"));
+        TerrainTexture blendMap = new TerrainTexture(Loader.getInstance().loadTexture("blendMap"));
+        TerrainTexturePack texturePack = new TerrainTexturePack(backTerrainTexture, rTexture, gTexture, bTexture);
+
+        GameObject terrainObj = new GameObject();
+        TerrainRendererComponent terrain = new TerrainRendererComponent(terrainObj, 0, 0, texturePack, blendMap);
+        terrainObj.AddComponent(terrain);
+        setTerrain(terrain);
+        gameObjects.add(terrainObj);
+    }
+    private void setUpLights(){
+        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
+        setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+    }
+    private void setUpCamera(){
+        GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
+        setCamera(new FirstPersonCamera(player));
+        cameraObj.AddComponent(getCamera());
+        gameObjects.add(cameraObj);
+    }
+    private void createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
+        player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
+        PhysicsComponent physicsComponent = new PhysicsComponent();
+        player.AddComponent(physicsComponent);
+        if (renderMesh)
+            player.AddComponent(new MeshRendererComponent(playerModel, 0));
+        gameObjects.add(player);
+        player.AddComponent(new PlayerBaseComponent(physicsComponent));
     }
 }

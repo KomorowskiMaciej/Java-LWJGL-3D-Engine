@@ -1,9 +1,14 @@
 package game;
 
 import engine.base.CoreEngine;
+import engine.modules.networking.OpCodes;
+import engine.modules.networking.ReceiverThread;
+import engine.modules.networking.Sender;
 import org.lwjgl.LWJGLUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 
 /**
  * Created by Maciek on 12.07.2016.
@@ -38,6 +43,18 @@ public class Main {
         if(jgllib != null)
             System.setProperty("org.lwjgl.librarypath", jgllib.getAbsolutePath());
 
-        new CoreEngine(new TestGame());
+        try {
+            Socket socket = new Socket("127.0.0.1", 1234);
+            new Thread(new ReceiverThread(socket)).start();
+
+            Sender.init(socket);
+            Sender.send(OpCodes.LOGIN);
+
+            new CoreEngine(new TestGame()); // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
+
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

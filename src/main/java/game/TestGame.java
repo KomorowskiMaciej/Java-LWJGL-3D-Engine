@@ -139,6 +139,12 @@ public class TestGame extends Game {
         gameObjects.add(cameraObj);
 
     }
+
     public void update() {
+
+
+
+
+
     }
 }

@@ -13,6 +13,7 @@ public class ReceiverThread implements Runnable {
         this.inputStream = new ObjectInputStream(socket.getInputStream());
     }
 
+
     @Override
     public void run() {
         while(!Thread.interrupted()) {
@@ -22,13 +23,13 @@ public class ReceiverThread implements Runnable {
                     case OpCodes.USERSTATE: {
                         UserState state = (UserState) inputStream.readObject();
 
-                        EventQueue.Queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
+                        EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
                         break;
                     }
                     case OpCodes.LOGIN: {
                         String id = inputStream.readUTF();
 
-                        EventQueue.Queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, id));
+                        EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, id));
                         break;
                     }
                 }

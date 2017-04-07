@@ -1,10 +1,10 @@
 package engine.modules.networking;
 
 public class NetworkEvent<T> {
-    public static int LOGIN = 0;
-    public static int PLAYER_MOVE = 1;
-    public static int PLAYER_SHOT = 2;
-    public static int PLAYER_DEAD = 3;
+    public static final int LOGIN = 0;
+    public static final int PLAYER_MOVE = 1;
+    public static final int PLAYER_SHOT = 2;
+    public static final int PLAYER_DEAD = 3;
 
     public int Type;
     public T Data;

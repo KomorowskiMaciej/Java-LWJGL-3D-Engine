@@ -14,11 +14,35 @@ public class UserState {
 
         UserState userState = (UserState) o;
 
-        return userID.equals(userState.userID);
+        return getUserID().equals(userState.getUserID());
     }
 
     @Override
     public int hashCode() {
-        return userID.hashCode();
+        return getUserID().hashCode();
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 }

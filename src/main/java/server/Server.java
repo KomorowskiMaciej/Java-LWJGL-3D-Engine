@@ -87,15 +87,13 @@ class Server {
 
     void startBroadcasting() {
         broadcastingExecutor.scheduleAtFixedRate(() -> {
-            while (true) {
-                Iterator iterator = userServerStates.entrySet().iterator();
-                logger.info("Broadcasting GameState");
-                while (iterator.hasNext()) {
-                    Map.Entry pair = (Map.Entry) iterator.next();
-                    UserServerState userServerState = (UserServerState) pair.getValue();
-                    userServerState.sendGameState(userServerStates.values());
+            Iterator iterator = userServerStates.entrySet().iterator();
+            logger.info("Broadcasting GameState");
+            while (iterator.hasNext()) {
+                Map.Entry pair = (Map.Entry) iterator.next();
+                UserServerState userServerState = (UserServerState) pair.getValue();
+                userServerState.sendGameState(userServerStates.values());
 
-                }
             }
         }, 0, SERVER_BROADCAST_RATE_MILLISECOND, TimeUnit.MILLISECONDS);
     }

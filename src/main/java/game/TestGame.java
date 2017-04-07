@@ -25,6 +25,13 @@ public class TestGame extends Game {
 
     public void init() {
 
+
+        /*
+            load models and textures
+         */
+
+        playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
+
         /*
         *
         * terrain generation
@@ -38,7 +45,6 @@ public class TestGame extends Game {
         TerrainTexture bTexture = new TerrainTexture(Loader.getInstance().loadTexture("path"));
         TerrainTexture blendMap = new TerrainTexture(Loader.getInstance().loadTexture("blendMap"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backTerrainTexture, rTexture, gTexture, bTexture);
-
 
         // TERRAIN
 
@@ -110,34 +116,62 @@ public class TestGame extends Game {
         }
 
 
-        // PLAYER
-
-        Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
-        GameObject player = new GameObject(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), new Vector3f(5, 5, 5));
-      //  player.AddComponent(new MeshRendererComponent(playerModel, 0));
-
-
-
-        PhysicsComponent playerphysics = new PhysicsComponent();
-        player.AddComponent(playerphysics);
-        player.AddComponent(new PlayerBaseComponent(playerphysics));
-
-        gameObjects.add(player);
-
-
-
-        //sun
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
-
-        // redlight
         setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
 
 
+
+
+
+
+
+        // PLAYER
+
+        GameObject player = createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
+
+        createMultiPlayer(new Vector3f(405, 0, 400), new Vector3f(0, 0, 0), "dupa");
+        createMultiPlayer(new Vector3f(410, 0, 400), new Vector3f(0, 0, 0), "dupa");
+        createMultiPlayer(new Vector3f(415, 0, 400), new Vector3f(0, 0, 0), "dupa");
+        createMultiPlayer(new Vector3f(420, 0, 400), new Vector3f(0, 0, 0), "dupa");
+
+
+
+        // CAMERA
         GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
         setCamera(new FirstPersonCamera(player));
         cameraObj.AddComponent(getCamera());
         gameObjects.add(cameraObj);
 
+    }
+
+    Model playerModel = null;
+    public GameObject createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh){
+        GameObject player = new GameObject(position , rotation, new Vector3f(5,5,5));
+        PhysicsComponent physicsComponent = new PhysicsComponent();
+        player.AddComponent(physicsComponent);
+        if(renderMesh)
+            player.AddComponent(new MeshRendererComponent(playerModel, 0));
+        gameObjects.add(player);
+
+        player.AddComponent(new PlayerBaseComponent(physicsComponent));
+
+        return player;
+    }
+
+    public GameObject createMultiPlayer(Vector3f position, Vector3f rotation, String name){
+        GameObject player = new GameObject(position , rotation, new Vector3f(5,5,5));
+        player.AddComponent(new MeshRendererComponent(playerModel, 0));
+        gameObjects.add(player);
+        return player;
+    }
+
+    public void updateMultiPlayer(GameObject player, Vector3f position, Vector3f rotation){
+        player.setPosition(position);
+        player.setRotation(rotation);
+    }
+
+    public void deleteMultiPlayer(GameObject player){
+        gameObjects.remove(player);
     }
 
     public void update() {

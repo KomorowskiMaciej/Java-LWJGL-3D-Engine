@@ -1,4 +1,6 @@
-package engine.modules.networking;
+package engine.network;
+
+import server.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,36 +8,39 @@ import java.net.Socket;
 
 public class ReceiverThread implements Runnable {
     private Socket socket;
-    ObjectInputStream inputStream;
 
     public ReceiverThread(Socket socket) throws IOException {
         this.socket = socket;
-        this.inputStream = new ObjectInputStream(socket.getInputStream());
     }
 
 
     @Override
     public void run() {
-        while(!Thread.interrupted()) {
-            try {
+
+        try(ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
+            while (!Thread.interrupted() && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown()) {
                 int opcode = inputStream.readInt();
-                switch(opcode) {
-                    case OpCodes.USERSTATE: {
+
+                switch (opcode) {
+                   case Constants.OpCode.USER_STATE: {
+                        System.out.println("USERSTATE");
                         UserState state = (UserState) inputStream.readObject();
 
                         EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
                         break;
                     }
-                    case OpCodes.LOGIN: {
-                        String id = inputStream.readUTF();
+                    case Constants.OpCode.LOGIN: {
+                        System.out.println("LOGIN");
+                        UserState id = (UserState) inputStream.readObject();
 
                         EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, id));
                         break;
                     }
+
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
             }
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
         }
     }
 }

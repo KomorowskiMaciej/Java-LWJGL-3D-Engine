@@ -1,4 +1,4 @@
-package engine.modules.networking;
+package engine.network;
 
 public class NetworkEvent<T> {
     public static final int LOGIN = 0;

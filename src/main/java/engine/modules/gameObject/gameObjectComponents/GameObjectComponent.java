@@ -11,8 +11,12 @@ public abstract class GameObjectComponent {
 
 
     public abstract void input();
-    public void init(){}
+
+    public void init() {
+    }
+
     public abstract void update();
+
     public abstract void render();
 
 

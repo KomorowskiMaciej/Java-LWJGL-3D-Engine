@@ -12,9 +12,9 @@ public final class GameObject {
 
     private ArrayList<GameObject> m_children;
     private ArrayList<GameObjectComponent> m_components;
-    private Vector3f m_position;
-    private Vector3f m_rotation;
-    private Vector3f m_scale;
+    private Vector3f m_position = new Vector3f();
+    private Vector3f m_rotation = new Vector3f();
+    private Vector3f m_scale = new Vector3f();
 
     public GameObject(Vector3f position, Vector3f rotation, Vector3f scale) {
         m_children = new ArrayList<GameObject>();
@@ -101,10 +101,9 @@ public final class GameObject {
         this.m_scale = scale;
     }
 
-    public <T> T getComponent() {
-        T data = null;
+    public <T> T getComponent(Class<T> asd) {
         for (GameObjectComponent component : m_components) {
-            if (component.getClass().isInstance(data))
+            if (asd.isInstance(component))
                 return (T) component;
         }
         return null;

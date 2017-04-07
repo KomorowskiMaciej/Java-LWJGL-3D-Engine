@@ -3,17 +3,17 @@ package game;
 import engine.base.Game;
 import engine.modules.gameObject.GameObject;
 import engine.modules.gameObject.gameObjectComponents.*;
-import engine.modules.gameWindow.*;
-import engine.modules.input.Input;
 import engine.modules.light.Light;
 import engine.modules.resourceMenegment.Loader;
 import engine.modules.resourceMenegment.OBJLoader;
 import engine.modules.resourceMenegment.containers.*;
-import engine.settings.Config;
-import org.lwjgl.input.Mouse;
+import engine.network.EventQueue;
+import engine.network.NetworkEvent;
+import engine.network.Sender;
 import org.lwjgl.util.vector.Vector3f;
+import server.UserState;
 
-import java.awt.*;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -22,6 +22,10 @@ import java.util.Random;
 public class TestGame extends Game {
 
     GameObject targetObject = null;
+    Model playerModel = null;
+    private HashMap<String, GameObject> players = new HashMap<>();
+    private UserState userState;
+    private GameObject player = null;
 
     public void init() {
 
@@ -117,22 +121,12 @@ public class TestGame extends Game {
 
 
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
-        setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
-
-
-
-
-
+        setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
 
 
         // PLAYER
 
-        GameObject player = createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
-
-        createMultiPlayer(new Vector3f(405, 0, 400), new Vector3f(0, 0, 0), "dupa");
-        createMultiPlayer(new Vector3f(410, 0, 400), new Vector3f(0, 0, 0), "dupa");
-        createMultiPlayer(new Vector3f(415, 0, 400), new Vector3f(0, 0, 0), "dupa");
-        createMultiPlayer(new Vector3f(420, 0, 400), new Vector3f(0, 0, 0), "dupa");
+        player = createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
 
 
 
@@ -144,12 +138,11 @@ public class TestGame extends Game {
 
     }
 
-    Model playerModel = null;
-    public GameObject createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh){
-        GameObject player = new GameObject(position , rotation, new Vector3f(5,5,5));
+    public GameObject createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
+        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
         PhysicsComponent physicsComponent = new PhysicsComponent();
         player.AddComponent(physicsComponent);
-        if(renderMesh)
+        if (renderMesh)
             player.AddComponent(new MeshRendererComponent(playerModel, 0));
         gameObjects.add(player);
 
@@ -158,27 +151,55 @@ public class TestGame extends Game {
         return player;
     }
 
-    public GameObject createMultiPlayer(Vector3f position, Vector3f rotation, String name){
-        GameObject player = new GameObject(position , rotation, new Vector3f(5,5,5));
+    public GameObject createMultiPlayer(Vector3f position, Vector3f rotation, String name) {
+        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
         player.AddComponent(new MeshRendererComponent(playerModel, 0));
         gameObjects.add(player);
         return player;
     }
 
-    public void updateMultiPlayer(GameObject player, Vector3f position, Vector3f rotation){
+    public void updateMultiPlayer(GameObject player, Vector3f position, Vector3f rotation) {
         player.setPosition(position);
         player.setRotation(rotation);
     }
 
-    public void deleteMultiPlayer(GameObject player){
+    public void deleteMultiPlayer(GameObject player) {
         gameObjects.remove(player);
     }
 
     public void update() {
+        while (EventQueue.queue.size() > 0) {
+            NetworkEvent event = EventQueue.queue.poll();
 
+            switch (event.Type) {
+                case NetworkEvent.LOGIN: {
+                    userState = (UserState) event.Data;
 
+                    player.setPosition(userState.getPosition());
+                    break;
+                }
 
+                case NetworkEvent.PLAYER_MOVE: {
+                    UserState state = (UserState) event.Data;
 
+                    if (players.containsKey(state.getUserID())) {
+                        GameObject p = players.get(state.getUserID());
+                        p.setPosition(state.getPosition());
+                        PlayerBaseComponent c = p.getComponent(PlayerBaseComponent.class);
+                        assert c != null;
+                        c.setHp(state.getHp());
+                    } else {
+                        GameObject p = createMultiPlayer(state.getPosition(), new Vector3f(0, 0, 0), state.getUserID());
+                        players.put(state.getUserID(), p);
+                    }
+                    break;
+                }
+            }
+        }
 
+        if (userState != null) {
+            userState.setPosition(player.getPosition());
+            Sender.send(NetworkEvent.PLAYER_MOVE, userState);
+        }
     }
 }

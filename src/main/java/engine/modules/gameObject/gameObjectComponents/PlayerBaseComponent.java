@@ -13,18 +13,24 @@ public class PlayerBaseComponent extends GameObjectComponent {
 
     private static final float RUN_SPEED = 20;
     private static final float TURN_SPEED = 20;
-
     private static final float TERRAIN_HEIGHT = 0;
-
+    private int hp = 100;
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
-
-
     private PhysicsComponent physics = null;
     private CameraBaseComponent camera;
 
+
     public PlayerBaseComponent(PhysicsComponent physics) {
         this.physics = physics;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class PlayerBaseComponent extends GameObjectComponent {
     public void update() {
         //getGameObject().increaseRotation(0, currentTurnSpeed * Window.getDeltaTime(), 0);
 
-        getGameObject().setRotation( new Vector3f(
+        getGameObject().setRotation(new Vector3f(
                 getGameObject().getRotation().getX(),
                 -camera.getGameObject().getRotation().getY(),
                 getGameObject().getRotation().getZ())

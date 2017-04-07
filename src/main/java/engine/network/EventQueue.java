@@ -1,4 +1,4 @@
-package engine.modules.networking;
+package engine.network;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

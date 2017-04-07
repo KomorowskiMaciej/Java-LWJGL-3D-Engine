@@ -76,6 +76,7 @@ public class MasterRenderer {
     private ShadowMapMasterRenderer shadowMapRenderer;
     private Map<Model, List<MeshRendererComponent>> objectRenderers = new HashMap<Model, List<MeshRendererComponent>>();
     private List<TerrainRendererComponent> terrains = new ArrayList<TerrainRendererComponent>();
+
     private MasterRenderer() {
         enableCulling();
         createProjectionMatrix();

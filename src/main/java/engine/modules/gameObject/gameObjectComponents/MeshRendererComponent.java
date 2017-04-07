@@ -27,13 +27,18 @@ public class MeshRendererComponent extends GameObjectComponent {
         return (float) row / (float) model.getNumberOfRows();
     }
 
-    public void Input() {
+    @Override
+    public void init() {
+
     }
 
-    public void Update() {
+    public void input() {
     }
 
-    public void Render() {
+    public void update() {
+    }
+
+    public void render() {
         MasterRenderer.getInstance().processObjectRenderer(this);
     }
 

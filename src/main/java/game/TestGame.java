@@ -3,14 +3,17 @@ package game;
 import engine.base.Game;
 import engine.modules.gameObject.GameObject;
 import engine.modules.gameObject.gameObjectComponents.*;
+import engine.modules.gameWindow.*;
 import engine.modules.input.Input;
 import engine.modules.light.Light;
 import engine.modules.resourceMenegment.Loader;
 import engine.modules.resourceMenegment.OBJLoader;
 import engine.modules.resourceMenegment.containers.*;
+import engine.settings.Config;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -111,7 +114,7 @@ public class TestGame extends Game {
 
         Model playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
         GameObject player = new GameObject(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), new Vector3f(5, 5, 5));
-        player.AddComponent(new MeshRendererComponent(playerModel, 0));
+      //  player.AddComponent(new MeshRendererComponent(playerModel, 0));
 
 
 
@@ -122,8 +125,9 @@ public class TestGame extends Game {
         gameObjects.add(player);
 
 
+
         //sun
-        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
+        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.1f, 0.1f, 0.1f)));
 
         // redlight
         setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
@@ -136,14 +140,44 @@ public class TestGame extends Game {
 
     }
 
+    private boolean isFading = false;
+    private boolean setToDay = true;
+    float fadeTimer = 1;
+    float dayTimer = 12;
     public void update() {
-        if (Mouse.isButtonDown(0)) {
-            if (targetObject == null) {
-                targetObject = Input.getTargetObject();
+        dayTimer += engine.modules.gameWindow.Window.getDeltaTime();
+        if(dayTimer > 24)
+            dayTimer = 0;
+        if(dayTimer > 18 && dayTimer < 18.1){
+            isFading = true;
+            setToDay = false;
+        } else if (dayTimer > 7.8 && dayTimer < 7.9){
+            isFading = true;
+            setToDay = true;
+        }
+
+        if(isFading){
+            if(!setToDay) {
+                fadeTimer -= engine.modules.gameWindow.Window.getDeltaTime() * 0.5;
+                if(fadeTimer < 0)
+                    isFading = false;
+            } else {
+                fadeTimer += engine.modules.gameWindow.Window.getDeltaTime() * 0.5;
+                if(fadeTimer > 1)
+                    isFading = false;
             }
-            if (targetObject != null)
-                targetObject.setPosition(Input.getCurrentTerrainPoint());
-        } else
-            targetObject = null;
+        }
+        Config.setSkyboxBlend(1 - fadeTimer * 0.4f);
+        Game.getSun().setColour(new Vector3f(1*fadeTimer,0.3f*fadeTimer,0.3f*fadeTimer));
+
+//        if (Mouse.isButtonDown(0)) {
+//            if (targetObject == null) {
+//                targetObject = input.getTargetObject();
+//            }
+//            if (targetObject != null)
+//                targetObject.setPosition(input.getCurrentTerrainPoint());
+//        } else
+//            targetObject = null;
+
     }
 }

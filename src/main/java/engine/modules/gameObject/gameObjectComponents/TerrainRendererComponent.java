@@ -41,13 +41,13 @@ public class TerrainRendererComponent extends GameObjectComponent {
     }
 
 
-    public void Input() {
+    public void input() {
     }
 
-    public void Update() {
+    public void update() {
     }
 
-    public void Render() {
+    public void render() {
         MasterRenderer.getInstance().processTerrainRenderer(this);
     }
 

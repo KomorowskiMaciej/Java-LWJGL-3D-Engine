@@ -42,20 +42,27 @@ public final class GameObject {
         return this;
     }
 
-    public void Input() {
+    public void input() {
 
         for (GameObjectComponent component : m_components)
-            component.Input();
+            component.input();
     }
 
-    public void Update() {
+
+    public void init() {
+
         for (GameObjectComponent component : m_components)
-            component.Update();
+            component.init();
     }
 
-    public void Render() {
+    public void update() {
         for (GameObjectComponent component : m_components)
-            component.Render();
+            component.update();
+    }
+
+    public void render() {
+        for (GameObjectComponent component : m_components)
+            component.render();
     }
 
     public void increasePosition(float dx, float dy, float dz) {

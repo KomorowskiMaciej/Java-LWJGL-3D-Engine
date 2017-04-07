@@ -10,11 +10,10 @@ public abstract class GameObjectComponent {
     private GameObject m_parent;
 
 
-    public abstract void Input();
-
-    public abstract void Update();
-
-    public abstract void Render();
+    public abstract void input();
+    public void init(){}
+    public abstract void update();
+    public abstract void render();
 
 
     public GameObject getGameObject() {

@@ -5,7 +5,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 
-public class window {
+public class Window {
     private static long lastFrameTime;
     private static float delta;
 

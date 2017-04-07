@@ -1,6 +1,6 @@
 package engine.modules.gameObject.gameObjectComponents;
 
-import engine.modules.gameWindow.window;
+import engine.modules.gameWindow.Window;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -16,7 +16,7 @@ public class PhysicsComponent extends GameObjectComponent {
     private Vector3f velocity = new Vector3f(0, 0, 0);
 
     @Override
-    public void Input() {
+    public void input() {
     }
 
     public void Jump() {
@@ -26,13 +26,14 @@ public class PhysicsComponent extends GameObjectComponent {
         }
     }
 
+
     @Override
-    public void Update() {
+    public void update() {
 
 
-        velocity.y += GRAVITY * window.getDeltaTime();
+        velocity.y += GRAVITY * Window.getDeltaTime();
 
-        getGameObject().increasePosition(velocity.x * window.getDeltaTime(), velocity.y * window.getDeltaTime(), velocity.z * window.getDeltaTime());
+        getGameObject().increasePosition(velocity.x * Window.getDeltaTime(), velocity.y * Window.getDeltaTime(), velocity.z * Window.getDeltaTime());
 
         float terrainHeight = game.TestGame.GetTerrain().getHeightOfTerrain(getGameObject().getPosition().x, getGameObject().getPosition().z);
 
@@ -46,7 +47,7 @@ public class PhysicsComponent extends GameObjectComponent {
     }
 
     @Override
-    public void Render() {
+    public void render() {
 
     }
 }

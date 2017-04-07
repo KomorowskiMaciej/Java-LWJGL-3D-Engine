@@ -23,35 +23,23 @@ public class ThirdPersonCamera extends CameraBaseComponent {
     }
 
     @Override
-    public void Update() {
+    public void update() {
         calculateZoom();
         calculatePitch();
         float horizontalDistance = calculateHorizontalDistance();
         float vecticalDistance = calculateVerticalDistance();
-        calculateCameraPosition(horizontalDistance, vecticalDistance);
+        calculateCameraPosition(horizontalDistance, vecticalDistance, player, angleAroundPlayer);
         getGameObject().getRotation().y = 180 - (player.getRotation().y + angleAroundPlayer);
     }
 
-    public void Input() {
+    public void input() {
     }
 
-    public void Render() {
+    public void render() {
     }
 
     public Vector3f getPosition() {
         return getGameObject().getPosition();
-    }
-
-
-    private void calculateCameraPosition(float horizDistance, float verticDistance) {
-
-        float theta = player.getRotation().y + angleAroundPlayer;
-        float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
-        float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-        getGameObject().getPosition().x = player.getPosition().x - offsetX;
-        getGameObject().getPosition().z = player.getPosition().z - offsetZ;
-        getGameObject().getPosition().y = player.getPosition().y + verticDistance;
-
     }
 
     private void calculateZoom() {

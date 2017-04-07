@@ -1,7 +1,7 @@
 package engine.modules.water;
 
 import engine.modules.gameObject.gameObjectComponents.CameraBaseComponent;
-import engine.modules.gameWindow.window;
+import engine.modules.gameWindow.Window;
 import engine.modules.light.Light;
 import engine.modules.resourceMenegment.Loader;
 import engine.modules.resourceMenegment.containers.Mesh;
@@ -57,7 +57,7 @@ public class WaterRenderer {
     private void prepareRender(CameraBaseComponent camera, Light sun) {
         shader.start();
         shader.loadViewMatrix(camera);
-        moveFactor += WAVE_SPEED * window.getDeltaTime();
+        moveFactor += WAVE_SPEED * Window.getDeltaTime();
         moveFactor %= 1;
         shader.loadMoveFactor(moveFactor);
         shader.loadLight(sun);

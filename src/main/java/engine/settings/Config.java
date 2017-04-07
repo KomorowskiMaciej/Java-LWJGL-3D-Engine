@@ -23,7 +23,7 @@ public class Config {
     private static final float FOV = 70;                                                                                  // Angle of camera view
     private static final float NEAR_PLANE = 0.1f;                                                                         // Near culling plane
     private static final float FAR_PLANE = 1000;                                                                           // Far culling plane
-    private static float AMBIENT_LIGHT = 0.1f;
+    private static float AMBIENT_LIGHT = 0.05f;
     private static final int MAX_LIGHTS = 4;
 
     private static final float MOUSE_PICKER_ROOT_OBJECT_RANGE = 5;
@@ -31,14 +31,14 @@ public class Config {
     private static final float LOD_BIAS = 0f;
 
 
-    private static final Vector3f ENV_RGB = new Vector3f(.02f, .001f, .001f);                                                  // enviroment colours (fog, Engine.modules.skybox mixine, ambient)
+    private static final Vector3f ENV_RGB = new Vector3f(.3f, .2f, .4f);                                                  // enviroment colours (fog, Engine.modules.skybox mixine, ambient)
 
 
-    private static float SKYBOX_BLEND = 0;                                                                          // mix of 2 Engine.modules.skybox  skybox1| 0-2f |skybox2
-    private static final float FOG_DENCITY = 0.01f;                                                                      // dencity of fog
-    private static final float FOG_GRADIENT = 3;                                                                          // fog spread
+    private static float SKYBOX_BLEND = 0.7f;                                                                          // mix of 2 Engine.modules.skybox  skybox1| 0-2f |skybox2
+    private static final float FOG_DENCITY = 0.007f;                                                                      // dencity of fog
+    private static final float FOG_GRADIENT = 4f;                                                                           // fog spread
     private static final float SKYBOX_SIZE = 500f;                                                                        // number of px in Engine.modules.skybox
-    private static final float SKYBOX_ROTATE_SPEED = 0.1f;
+    private static final float SKYBOX_ROTATE_SPEED = 0.6f;
 
 
     //shadows
@@ -150,5 +150,4 @@ public class Config {
     public static int getFpsCap() {
         return FPS_CAP;
     }
-
 }

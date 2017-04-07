@@ -127,7 +127,7 @@ public class TestGame extends Game {
 
 
         //sun
-        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.1f, 0.1f, 0.1f)));
+        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
 
         // redlight
         setLight(new Light(new Vector3f(400,-4.7f,400),new Vector3f(2,0,0),new Vector3f(1,0.01f,0.002f)));
@@ -139,45 +139,6 @@ public class TestGame extends Game {
         gameObjects.add(cameraObj);
 
     }
-
-    private boolean isFading = false;
-    private boolean setToDay = true;
-    float fadeTimer = 1;
-    float dayTimer = 12;
     public void update() {
-        dayTimer += engine.modules.gameWindow.Window.getDeltaTime();
-        if(dayTimer > 24)
-            dayTimer = 0;
-        if(dayTimer > 18 && dayTimer < 18.1){
-            isFading = true;
-            setToDay = false;
-        } else if (dayTimer > 7.8 && dayTimer < 7.9){
-            isFading = true;
-            setToDay = true;
-        }
-
-        if(isFading){
-            if(!setToDay) {
-                fadeTimer -= engine.modules.gameWindow.Window.getDeltaTime() * 0.5;
-                if(fadeTimer < 0)
-                    isFading = false;
-            } else {
-                fadeTimer += engine.modules.gameWindow.Window.getDeltaTime() * 0.5;
-                if(fadeTimer > 1)
-                    isFading = false;
-            }
-        }
-        Config.setSkyboxBlend(1 - fadeTimer * 0.4f);
-        Game.getSun().setColour(new Vector3f(1*fadeTimer,0.3f*fadeTimer,0.3f*fadeTimer));
-
-//        if (Mouse.isButtonDown(0)) {
-//            if (targetObject == null) {
-//                targetObject = input.getTargetObject();
-//            }
-//            if (targetObject != null)
-//                targetObject.setPosition(input.getCurrentTerrainPoint());
-//        } else
-//            targetObject = null;
-
     }
 }

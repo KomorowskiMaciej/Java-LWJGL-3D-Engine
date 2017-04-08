@@ -137,27 +137,24 @@ public class TestGame extends Game {
         c.setHp(state.getHp());
     }
 
-    public void deleteExternalPlayer(GameObject player) {
-        gameObjects.remove(player);
-    }
-
-
-
     private void setUpMultiplayer(){
         try {
             Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
             try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                  ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-
+                objectOutputStream = out;
                 login(out, in); // synchronous process -> block thread until successfully log in
                 executorService.submit(new ReceiverThread(in)); // Start listening for server's userStates broadcasting
+
+                isMultiplayer = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {

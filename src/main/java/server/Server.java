@@ -29,12 +29,12 @@ class Server {
 
     void listenOn(int port) throws IOException {
 
-        try (ServerSocket serverSocker = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info(String.format("Listening on port %d", port));
 
-            while (true) {
+            while (!Thread.interrupted()) {
 
-                Socket socket = serverSocker.accept();
+                Socket socket = serverSocket.accept();
                 new Thread(() -> process(socket)).start();
             }
         }
@@ -44,19 +44,20 @@ class Server {
 
         logger.info("Process socket from: " + socket.getInetAddress().getHostAddress());
 
-        try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
-            for (; ; ) {
+        try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            while (!Thread.interrupted()) {
                 int opCode = in.readInt();
                 logger.info(String.format("Received opCode %d", opCode));
                 switch (opCode) {
                     case Constants.OpCode.LOGIN: {
                         String newUserID = UUID.randomUUID().toString();
-                        logger.info(String.format("Login new user with userID %ss", newUserID));
-                        UserServerState userServerState = new UserServerState(newUserID, socket);
+                        logger.info(String.format("Login new user with userID %s", newUserID));
+                        UserServerState userServerState = new UserServerState(newUserID, out);
                         userServerStates.put(newUserID, userServerState);
 
                         out.writeInt(Constants.OpCode.LOGIN);
+                        out.flush();
                         logger.info("Wrote int");
                         out.writeObject(userServerState.getUserState());
                         out.flush();
@@ -88,7 +89,6 @@ class Server {
     void startBroadcasting() {
         broadcastingExecutor.scheduleAtFixedRate(() -> {
             Iterator iterator = userServerStates.entrySet().iterator();
-            logger.info("Broadcasting GameState");
             while (iterator.hasNext()) {
                 Map.Entry pair = (Map.Entry) iterator.next();
                 UserServerState userServerState = (UserServerState) pair.getValue();

@@ -9,23 +9,31 @@ import engine.modules.resourceMenegment.OBJLoader;
 import engine.modules.resourceMenegment.containers.*;
 import engine.network.EventQueue;
 import engine.network.NetworkEvent;
-import engine.network.Sender;
+import engine.network.UpdatePlayerState;
 import org.lwjgl.util.vector.Vector3f;
 import server.UserState;
 
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Maciek on 12.07.2016.
  */
 public class TestGame extends Game {
-
+    private final ObjectOutputStream objectOutputStream;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     GameObject targetObject = null;
     Model playerModel = null;
     private HashMap<String, GameObject> players = new HashMap<>();
     private UserState userState;
     private GameObject player = null;
+
+    public TestGame(ObjectOutputStream objectOutputStream) {
+        this.objectOutputStream = objectOutputStream;
+    }
 
     public void init() {
 
@@ -183,11 +191,11 @@ public class TestGame extends Game {
                     UserState state = (UserState) event.Data;
 
                     if (players.containsKey(state.getUserID())) {
-                        GameObject p = players.get(state.getUserID());
-                        p.setPosition(state.getPosition());
-                        PlayerBaseComponent c = p.getComponent(PlayerBaseComponent.class);
-                        assert c != null;
-                        c.setHp(state.getHp());
+                        GameObject gameObject = players.get(state.getUserID());
+                        gameObject.setPosition(state.getPosition());
+                        PlayerBaseComponent playerStateComponent = gameObject.getComponent(PlayerBaseComponent.class);
+                        // TODO: 08.04.2017 Tutaj sypie nullem - playerStateComponent == null
+                        playerStateComponent.setHp(state.getHp());
                     } else {
                         GameObject p = createMultiPlayer(state.getPosition(), new Vector3f(0, 0, 0), state.getUserID());
                         players.put(state.getUserID(), p);
@@ -199,7 +207,8 @@ public class TestGame extends Game {
 
         if (userState != null) {
             userState.setPosition(player.getPosition());
-            Sender.send(NetworkEvent.PLAYER_MOVE, userState);
+            executorService.submit(new UpdatePlayerState(objectOutputStream, userState));
+
         }
     }
 }

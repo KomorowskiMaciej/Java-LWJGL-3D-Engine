@@ -1,20 +1,10 @@
 package game;
 
 import engine.base.CoreEngine;
-import engine.network.EventQueue;
-import engine.network.FailedLoginException;
-import engine.network.NetworkEvent;
-import engine.network.ReceiverThread;
 import org.lwjgl.LWJGLUtil;
-import server.Constants;
-import server.UserState;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

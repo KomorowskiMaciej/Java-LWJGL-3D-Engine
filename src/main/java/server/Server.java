@@ -69,6 +69,7 @@ class Server {
 
                         try {
                             UserState userState = (UserState) in.readObject();
+                            userState.print();
                             UserServerState userServerState = userServerStates.get(userState.getUserID());
                             logger.info(String.format("Update %s %s", userState.getUserID(), userState.toString()));
                             userServerState.getExecutor().submit(new UpdateUserState(userServerState, userState)); //Execute update userServerState method in user's executor

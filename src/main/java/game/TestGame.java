@@ -1,22 +1,25 @@
 package game;
 
-import engine.base.CoreEngine;
 import engine.base.Game;
 import engine.modules.gameObject.GameObject;
 import engine.modules.gameObject.gameObjectComponents.*;
 import engine.modules.light.Light;
 import engine.modules.resourceMenegment.Loader;
 import engine.modules.resourceMenegment.OBJLoader;
-import engine.modules.resourceMenegment.containers.*;
+import engine.modules.resourceMenegment.containers.Model;
+import engine.modules.resourceMenegment.containers.TerrainTexture;
+import engine.modules.resourceMenegment.containers.TerrainTexturePack;
+import engine.modules.resourceMenegment.containers.Texture;
 import engine.network.*;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
 import server.UserState;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,12 +29,13 @@ import java.util.concurrent.Executors;
  */
 public class TestGame extends Game {
 
-    private ObjectOutputStream objectOutputStream;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private HashMap<String, GameObject> players = new HashMap<>();
     Model playerModel = null;
     private GameObject player = null;
-
+    private UserState playerState = new UserState();
     private boolean isMultiplayer = false;
 
 
@@ -51,12 +55,12 @@ public class TestGame extends Game {
     }
 
     public void update() {
-        if(isMultiplayer)
+        if (isMultiplayer)
             updateMultiplayer();
     }
 
 
-    private void updateMultiplayer(){
+    private void updateMultiplayer() {
 
 
         // WYKONYWANIE POLECEN SERWERA
@@ -83,18 +87,18 @@ public class TestGame extends Game {
         }
 
         // WYSYLANIE INFO DO SERWERA
-        UserState userState = new UserState();
 
-        userState.setPosition(player.getPosition());
-        userState.setRotation(player.getRotation());
+
+        playerState.setPosition(player.getPosition());
+        playerState.setRotation(player.getRotation());
 
         PlayerBaseComponent baseComponent = player.getComponent(PlayerBaseComponent.class);
-        if(baseComponent == null)
+        if (baseComponent == null)
             throw new IllegalStateException("Player base component == null during sending data to server.");
-        userState.setHp(baseComponent.getHp());
+        playerState.setHp(baseComponent.getHp());
 
 
-        executorService.submit(new UpdatePlayerState(objectOutputStream, userState));
+        executorService.submit(new UpdatePlayerState(out, playerState));
     }
 
 
@@ -106,16 +110,16 @@ public class TestGame extends Game {
     }
 
 
-    public void setPlayerStartStates(UserState state){
+    public void setPlayerStartStates(UserState state) {
 
-        if(state.getPosition() == null || state.getRotation() == null)
+        if (state.getPosition() == null || state.getRotation() == null)
             throw new IllegalStateException("UserState can't passes nulls.");
-
+        playerState = state;
         player.setPosition(state.getPosition());
         player.setRotation(state.getRotation());
 
         PlayerBaseComponent c = player.getComponent(PlayerBaseComponent.class);
-        if(c == null)
+        if (c == null)
             throw new IllegalStateException("PlayerBaseComponent hasnt found in player object");
         c.setHp(state.getHp());
     }
@@ -124,36 +128,35 @@ public class TestGame extends Game {
     public void updateExternalPlayer(UserState state) {
 
         // walidacja
-        if(state.getPosition() == null || state.getRotation() == null)
+        if (state.getPosition() == null || state.getRotation() == null)
             throw new IllegalStateException("UserState can't passes nulls.");
 
-        GameObject p = players.get(state.getUserID());
-            if(p == null)
-                throw new IllegalStateException("State.UserId doesnt match to any player.");
+        GameObject gameObject = players.get(state.getUserID());
+        if (gameObject == null)
+            throw new IllegalStateException("State.UserId doesnt match to any player.");
 
-        p.setPosition(state.getPosition());
-        PlayerBaseComponent c = p.getComponent(PlayerBaseComponent.class);
-        assert c != null;
-        c.setHp(state.getHp());
+        gameObject.setPosition(state.getPosition());
+        PlayerBaseComponent playerComponent = gameObject.getComponent(PlayerBaseComponent.class);
+
+        assert playerComponent != null;
+
+        playerComponent.setHp(state.getHp());
     }
 
-    private void setUpMultiplayer(){
+    private void setUpMultiplayer() {
         try {
             Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
-            try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-                objectOutputStream = out;
-                login(out, in); // synchronous process -> block thread until successfully log in
-                executorService.submit(new ReceiverThread(in)); // Start listening for server's userStates broadcasting
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
-                isMultiplayer = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            login(out, in); // synchronous process -> block thread until successfully log in
+            executorService.submit(new ReceiverThread(in)); // Start listening for server's userStates broadcasting
+            isMultiplayer = true;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        // TODO: 08.04.2017 close streams somewhere albo jebać
 
     }
 
@@ -166,7 +169,6 @@ public class TestGame extends Game {
         gameObjects.add(player);
         player.AddComponent(new PlayerBaseComponent(physicsComponent));
     }
-
 
 
     // todo: refactor
@@ -185,27 +187,15 @@ public class TestGame extends Game {
                 e.printStackTrace();
             }
         } else
-            throw new FailedLoginException(String.format("Received wrong opcode [%d]during login process", opCode));
+            throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", opCode));
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void setUpModelsAndTextures(){
+    private void setUpModelsAndTextures() {
         playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
     }
-    private void setUpTerrain (){
+
+    private void setUpTerrain() {
 
         TerrainTexture backTerrainTexture = new TerrainTexture(Loader.getInstance().loadTexture("grassy"));
         TerrainTexture rTexture = new TerrainTexture(Loader.getInstance().loadTexture("dirt"));
@@ -220,11 +210,13 @@ public class TestGame extends Game {
         setTerrain(terrain);
         gameObjects.add(terrainObj);
     }
-    private void setUpLights(){
+
+    private void setUpLights() {
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
         setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
     }
-    private void setUpCamera(){
+
+    private void setUpCamera() {
         GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
         setCamera(new FirstPersonCamera(player));
         cameraObj.AddComponent(getCamera());

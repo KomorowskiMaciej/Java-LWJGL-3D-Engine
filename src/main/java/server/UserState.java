@@ -80,5 +80,8 @@ public class UserState implements Serializable {
     public void setHp(int hp) {
         this.hp = hp;
     }
+    public void print(){
+        System.out.println(toString());
+    }
 
 }

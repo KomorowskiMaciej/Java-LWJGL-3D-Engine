@@ -21,6 +21,8 @@ public class UpdatePlayerState implements Runnable {
     @Override
     public void run() {
         try {
+            if (userState != null && userState.getUserID() == null)
+                return;
             outputStream.writeInt(Constants.OpCode.USER_STATE);
             outputStream.writeObject(userState);
             outputStream.flush();

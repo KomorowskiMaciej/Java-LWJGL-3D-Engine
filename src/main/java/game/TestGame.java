@@ -1,5 +1,6 @@
 package game;
 
+import engine.base.CoreEngine;
 import engine.base.Game;
 import engine.modules.gameObject.GameObject;
 import engine.modules.gameObject.gameObjectComponents.*;
@@ -7,32 +8,31 @@ import engine.modules.light.Light;
 import engine.modules.resourceMenegment.Loader;
 import engine.modules.resourceMenegment.OBJLoader;
 import engine.modules.resourceMenegment.containers.*;
-import engine.network.EventQueue;
-import engine.network.NetworkEvent;
-import engine.network.ReceiverThread;
-import engine.network.Sender;
+import engine.network.*;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
 import server.UserState;
-
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Maciek on 12.07.2016.
  */
 public class TestGame extends Game {
 
+    private ObjectOutputStream objectOutputStream;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private HashMap<String, GameObject> players = new HashMap<>();
     Model playerModel = null;
     private GameObject player = null;
 
-
     private boolean isMultiplayer = false;
-
-
 
 
     public void init() {
@@ -93,7 +93,8 @@ public class TestGame extends Game {
             throw new IllegalStateException("Player base component == null during sending data to server.");
         userState.setHp(baseComponent.getHp());
 
-        Sender.send(NetworkEvent.PLAYER_MOVE, userState);
+
+        executorService.submit(new UpdatePlayerState(objectOutputStream, userState));
     }
 
 
@@ -123,7 +124,6 @@ public class TestGame extends Game {
     public void updateExternalPlayer(UserState state) {
 
         // walidacja
-
         if(state.getPosition() == null || state.getRotation() == null)
             throw new IllegalStateException("UserState can't passes nulls.");
 
@@ -145,19 +145,65 @@ public class TestGame extends Game {
 
     private void setUpMultiplayer(){
         try {
-            Socket socket = new Socket("localhost", 1234);
-            if (socket.isConnected()) {
-                new Thread(new ReceiverThread(socket)).start();
+            Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
+            try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-                Sender.init(socket);
-                Sender.send(Constants.OpCode.LOGIN);
-                isMultiplayer = true;
+                login(out, in); // synchronous process -> block thread until successfully log in
+                executorService.submit(new ReceiverThread(in)); // Start listening for server's userStates broadcasting
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            System.out.println("Cannot connect to the server - offline mode.");
-        }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    private void createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
+        player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
+        PhysicsComponent physicsComponent = new PhysicsComponent();
+        player.AddComponent(physicsComponent);
+        if (renderMesh)
+            player.AddComponent(new MeshRendererComponent(playerModel, 0));
+        gameObjects.add(player);
+        player.AddComponent(new PlayerBaseComponent(physicsComponent));
+    }
+
+
+
+    // todo: refactor
+
+    private static void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
+        out.writeInt(Constants.OpCode.LOGIN);
+        out.flush();
+
+        int opCode = in.readInt();
+        if (opCode == Constants.OpCode.LOGIN) {
+            try {
+                UserState newUserState = (UserState) in.readObject();
+                EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, newUserState));
+                System.out.println("Loggned in");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else
+            throw new FailedLoginException(String.format("Received wrong opcode [%d]during login process", opCode));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void setUpModelsAndTextures(){
         playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
@@ -186,14 +232,5 @@ public class TestGame extends Game {
         setCamera(new FirstPersonCamera(player));
         cameraObj.AddComponent(getCamera());
         gameObjects.add(cameraObj);
-    }
-    private void createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
-        player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
-        PhysicsComponent physicsComponent = new PhysicsComponent();
-        player.AddComponent(physicsComponent);
-        if (renderMesh)
-            player.AddComponent(new MeshRendererComponent(playerModel, 0));
-        gameObjects.add(player);
-        player.AddComponent(new PlayerBaseComponent(physicsComponent));
     }
 }

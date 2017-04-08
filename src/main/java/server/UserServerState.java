@@ -19,12 +19,12 @@ import static server.Utils.getRandomSprawnVector;
  */
 public class UserServerState {
     private UserState userState;
-    private Socket socket;
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ObjectOutputStream out;
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
-    UserServerState(String userID, Socket socket) {
+    UserServerState(String userID, ObjectOutputStream out) {
         this.userState = new UserState(userID, getRandomSprawnVector(), new Vector3f(0,0,0), DEFAULT_HP);
-        this.socket = socket;
+        this.out = out;
     }
 
     void updateUserState(UserState userState) {
@@ -36,27 +36,16 @@ public class UserServerState {
     }
 
     void sendGameState(Collection<UserServerState> userStateList) {
-
-        userStateList.forEach(userServerState -> {
-            try {
-                if (!Objects.equals(userState, userServerState.userState)) {
-                    if (socket == null) {
-                        System.out.println("Socket is null");
-                    } else if (socket.isClosed()) {
-                        System.out.println("Socket is closed");
-                    } else if (socket.isOutputShutdown()) {
-                        System.out.println("Socket output is shutdown");
-                    } else {
-                        try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
-                            out.writeInt(Constants.OpCode.USER_STATE);
-                            out.writeObject(userServerState.userState);
-                            out.flush();
-                        }
+        
+        userStateList.parallelStream().forEach(userServerState -> {
+            if(!userState.getUserID().equals(userServerState.userState.getUserID())){
+                    try {
+                        out.writeInt(Constants.OpCode.USER_STATE);
+                        out.writeObject(userServerState.userState);
+                        out.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
 

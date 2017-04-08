@@ -1,8 +1,10 @@
 package game;
 
 import engine.base.CoreEngine;
+import engine.network.EventQueue;
+import engine.network.FailedLoginException;
+import engine.network.NetworkEvent;
 import engine.network.ReceiverThread;
-import engine.network.Sender;
 import org.lwjgl.LWJGLUtil;
 import server.Constants;
 import server.UserState;
@@ -11,15 +13,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Maciek on 12.07.2016.
  */
 public class Main {
+    static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     public static void main(String[] args) {
-
-
         File jgllib = null;
 
         switch (LWJGLUtil.getPlatform()) {
@@ -42,9 +47,6 @@ public class Main {
         if (jgllib != null)
             System.setProperty("org.lwjgl.librarypath", jgllib.getAbsolutePath());
 
-
-
         new CoreEngine(new TestGame()); // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
-
     }
 }

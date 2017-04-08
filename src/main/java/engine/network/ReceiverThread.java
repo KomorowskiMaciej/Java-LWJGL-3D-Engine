@@ -1,46 +1,36 @@
 package engine.network;
 
-import server.*;
+import server.Constants;
+import server.UserState;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.Socket;
 
 public class ReceiverThread implements Runnable {
-    private Socket socket;
+    private ObjectInputStream inputStream;
 
-    public ReceiverThread(Socket socket) throws IOException {
-        this.socket = socket;
+
+    public ReceiverThread(ObjectInputStream inputStream) {
+        this.inputStream = inputStream;
+
     }
-
 
     @Override
     public void run() {
-
-        try(ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
-            while (!Thread.interrupted() && socket.isConnected() && !socket.isClosed() && !socket.isInputShutdown()) {
+        try {
+            while (!Thread.interrupted()) {
                 int opcode = inputStream.readInt();
+                if (opcode == Constants.OpCode.USER_STATE) {
+                    System.out.println("USER_STATE");
+                    UserState state = (UserState) inputStream.readObject();
+                    EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
+                } else
+                    throw new WrongOpCodeException(Constants.OpCode.USER_STATE,opcode);
 
-                switch (opcode) {
-                   case Constants.OpCode.USER_STATE: {
-                        System.out.println("USERSTATE");
-                        UserState state = (UserState) inputStream.readObject();
-
-                        EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
-                        break;
-                    }
-                    case Constants.OpCode.LOGIN: {
-                        System.out.println("LOGIN");
-                        UserState id = (UserState) inputStream.readObject();
-
-                        EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, id));
-                        break;
-                    }
-
-                }
             }
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 }

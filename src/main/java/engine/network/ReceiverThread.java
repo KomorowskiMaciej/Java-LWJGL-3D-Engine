@@ -21,7 +21,7 @@ public class ReceiverThread implements Runnable {
             while (!Thread.interrupted()) {
                 int opcode = inputStream.readInt();
                 if (opcode == Constants.OpCode.USER_STATE) {
-                    System.out.println("USER_STATE");
+                    //System.out.println("USER_STATE");
                     UserState state = (UserState) inputStream.readObject();
                     EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
                 } else

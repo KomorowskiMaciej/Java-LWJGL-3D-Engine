@@ -18,7 +18,7 @@ public abstract class Game {
     private static List<WaterTile> waterTiles = new ArrayList<WaterTile>();
     private static List<GuiTexture> guiTextures = new ArrayList<>();
     private static TerrainRendererComponent terrain;
-    protected List<GameObject> gameObjects = new ArrayList<GameObject>();
+    protected List<GameObject> gameObjects = new ArrayList<>();
 
     public static TerrainRendererComponent getTerrain() {
         return terrain;

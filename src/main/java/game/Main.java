@@ -12,8 +12,6 @@ import java.util.concurrent.Executors;
  * Created by Maciek on 12.07.2016.
  */
 public class Main {
-    static ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     public static void main(String[] args) {
         File jgllib = null;
 

@@ -8,29 +8,20 @@ import org.lwjgl.util.vector.Vector3f;
 /**
  * Created by Maciek on 13.07.2016.
  */
-public class PlayerBaseComponent extends GameObjectComponent {
+public class FirstPersonMovementComponent extends GameObjectComponent {
 
 
     private static final float RUN_SPEED = 20;
     private static final float TURN_SPEED = 20;
     private static final float TERRAIN_HEIGHT = 0;
-    private int hp = 100;
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
     private PhysicsComponent physics = null;
     private CameraBaseComponent camera;
 
 
-    public PlayerBaseComponent(PhysicsComponent physics) {
+    public FirstPersonMovementComponent(PhysicsComponent physics) {
         this.physics = physics;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
     }
 
     @Override

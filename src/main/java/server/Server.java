@@ -94,7 +94,6 @@ class Server {
                 Map.Entry pair = (Map.Entry) iterator.next();
                 UserServerState userServerState = (UserServerState) pair.getValue();
                 userServerState.sendGameState(userServerStates.values());
-
             }
         }, 0, SERVER_BROADCAST_RATE_MILLISECOND, TimeUnit.MILLISECONDS);
     }

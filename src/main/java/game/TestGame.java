@@ -11,6 +11,7 @@ import engine.modules.resourceMenegment.containers.TerrainTexture;
 import engine.modules.resourceMenegment.containers.TerrainTexturePack;
 import engine.modules.resourceMenegment.containers.Texture;
 import engine.network.*;
+import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
 import server.UserState;
@@ -35,7 +36,6 @@ public class TestGame extends Game {
     private HashMap<String, GameObject> players = new HashMap<>();
     Model playerModel = null;
     private GameObject player = null;
-    private UserState playerState = new UserState();
     private boolean isMultiplayer = false;
 
 
@@ -47,7 +47,7 @@ public class TestGame extends Game {
         // LIGHTS
         setUpLights();
         // PLAYER
-        createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
+        createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), true);
         // CAMERA
         setUpCamera();
         // MULTIPLAYER
@@ -57,8 +57,12 @@ public class TestGame extends Game {
     public void update() {
         if (isMultiplayer)
             updateMultiplayer();
+
+        //System.out.println("Pozycja gracza: " + player.getPosition());
     }
 
+
+    GameObject testPlayer = null;
 
     private void updateMultiplayer() {
 
@@ -74,12 +78,14 @@ public class TestGame extends Game {
                 }
                 case NetworkEvent.PLAYER_MOVE: {
                     UserState state = (UserState) event.Data;
-
-                    if (players.containsKey(state.getUserID())) {
-                        updateExternalPlayer(state);
-                    } else {
-                        GameObject p = createExternalPlayer(state.getPosition(), state.getRotation());
-                        players.put(state.getUserID(), p);
+                    System.out.println(state.getUserID().equals(playerUserID));
+                    if(!state.getUserID().equals(playerUserID)) {
+                        if (testPlayer != null) {
+                            updateExternalPlayer(state);
+                        } else {
+                            testPlayer = createExternalPlayer(state.getPosition(), state.getRotation());
+                            //  players.put(state.getUserID(), p);
+                        }
                     }
                     break;
                 }
@@ -88,59 +94,70 @@ public class TestGame extends Game {
 
         // WYSYLANIE INFO DO SERWERA
 
-
+        UserState playerState = new UserState();
         playerState.setPosition(player.getPosition());
         playerState.setRotation(player.getRotation());
+        playerState.setUserID(playerUserID);
+        playerState.setHp(100);
 
-        PlayerBaseComponent baseComponent = player.getComponent(PlayerBaseComponent.class);
+        PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
         if (baseComponent == null)
             throw new IllegalStateException("Player base component == null during sending data to server.");
-        playerState.setHp(baseComponent.getHp());
-
-
+        //playerState.setHp(baseComponent.getHp());
+//
+//        try {
+//            out.writeInt(Constants.OpCode.USER_STATE);
+//            out.writeObject(playerState);
+//            out.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         executorService.submit(new UpdatePlayerState(out, playerState));
     }
 
-
     public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {
-        GameObject player = new GameObject(position, rotation, new Vector3f(5, 5, 5));
-        player.AddComponent(new MeshRendererComponent(playerModel, 0));
-        gameObjects.add(player);
+        GameObject p = new GameObject(position, rotation, new Vector3f(5, 5, 5));
+        p.AddComponent(new MeshRendererComponent(playerModel, 0));
+        //p.AddComponent(new PlayerComponent());
+        gameObjects.add(p);
         return player;
     }
 
-
+private String playerUserID = null;
     public void setPlayerStartStates(UserState state) {
-
-        if (state.getPosition() == null || state.getRotation() == null)
-            throw new IllegalStateException("UserState can't passes nulls.");
-        playerState = state;
-        player.setPosition(state.getPosition());
-        player.setRotation(state.getRotation());
-
-        PlayerBaseComponent c = player.getComponent(PlayerBaseComponent.class);
-        if (c == null)
-            throw new IllegalStateException("PlayerBaseComponent hasnt found in player object");
-        c.setHp(state.getHp());
+//
+//        if (state.getPosition() == null || state.getRotation() == null)
+//            throw new IllegalStateException("UserState can't passes nulls.");
+//        player.setPosition(state.getPosition());
+//        player.setRotation(state.getRotation());
+        playerUserID = state.getUserID();
+//
+//        PlayerComponent c = player.getComponent(PlayerComponent.class);
+//        if (c == null)
+//            throw new IllegalStateException("FirstPersonMovementComponent hasnt found in player object");
+//        c.setHp(state.getHp());
     }
-
 
     public void updateExternalPlayer(UserState state) {
 
-        // walidacja
-        if (state.getPosition() == null || state.getRotation() == null)
-            throw new IllegalStateException("UserState can't passes nulls.");
+            // walidacja
+            if (state.getPosition() == null || state.getRotation() == null) {
+                throw new IllegalStateException("UserState can't passes nulls.");
+            }
 
-        GameObject gameObject = players.get(state.getUserID());
-        if (gameObject == null)
-            throw new IllegalStateException("State.UserId doesnt match to any player.");
+            //GameObject gameObject = players.get(state.getUserID());
+            if (testPlayer == null) {
+                throw new IllegalStateException("State.UserId doesnt match to any player.");
+            }
 
-        gameObject.setPosition(state.getPosition());
-        PlayerBaseComponent playerComponent = gameObject.getComponent(PlayerBaseComponent.class);
+            testPlayer.setPosition(state.getPosition());
+           // PlayerComponent playerComponent = gameObject.getComponent(PlayerComponent.class);
 
-        assert playerComponent != null;
+           // assert playerComponent != null;
 
-        playerComponent.setHp(state.getHp());
+//            playerComponent.setHp(state.getHp());
+
+
     }
 
     private void setUpMultiplayer() {
@@ -167,7 +184,8 @@ public class TestGame extends Game {
         if (renderMesh)
             player.AddComponent(new MeshRendererComponent(playerModel, 0));
         gameObjects.add(player);
-        player.AddComponent(new PlayerBaseComponent(physicsComponent));
+        player.AddComponent(new FirstPersonMovementComponent(physicsComponent));
+        player.AddComponent(new PlayerComponent());
     }
 
 
@@ -192,7 +210,7 @@ public class TestGame extends Game {
 
 
     private void setUpModelsAndTextures() {
-        playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(true);
+        playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(false);
     }
 
     private void setUpTerrain() {

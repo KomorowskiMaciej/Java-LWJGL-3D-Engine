@@ -36,9 +36,7 @@ public class UserServerState {
     }
 
     void sendGameState(Collection<UserServerState> userStateList) {
-        
         userStateList.parallelStream().forEach(userServerState -> {
-            if(!userState.getUserID().equals(userServerState.userState.getUserID())){
                     try {
                         out.writeInt(Constants.OpCode.USER_STATE);
                         out.writeObject(userServerState.userState);
@@ -46,12 +44,8 @@ public class UserServerState {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-            }
         });
-
-
     }
-
     UserState getUserState() {
         return userState;
     }

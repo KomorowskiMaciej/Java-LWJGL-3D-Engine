@@ -9,8 +9,6 @@ import java.util.Random;
  */
 public class Utils {
     public static Vector3f getRandomSprawnVector() {
-
-
-        return new Vector3f(400, 400, 0);
+        return new Vector3f(400, 0, 402);
     }
 }

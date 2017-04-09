@@ -13,8 +13,7 @@ public class UserState implements Serializable {
     private Vector3f rotation;
     private int hp;
 
-    public UserState() {
-    }
+    public UserState() {}
 
     UserState(String userID, Vector3f position, Vector3f rotation, int hp) {
         this.setUserID(userID);
@@ -66,6 +65,8 @@ public class UserState implements Serializable {
     }
 
     public String getUserID() {
+      //  if(userID == null)
+       //     throw new IllegalStateException("Wypierdala nulla.");
         return userID;
     }
 

@@ -26,6 +26,7 @@ public class UpdatePlayerState implements Runnable {
             outputStream.writeInt(Constants.OpCode.USER_STATE);
             outputStream.writeObject(userState);
             outputStream.flush();
+            System.out.println("Wyslano obiekt gracza lokalnego.");
         } catch (IOException e) {
             e.printStackTrace();
         }

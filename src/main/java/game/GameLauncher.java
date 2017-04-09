@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Maciek on 12.07.2016.
  */
-public class Main {
+public class GameLauncher {
     public static void main(String[] args) {
         File jgllib = null;
 

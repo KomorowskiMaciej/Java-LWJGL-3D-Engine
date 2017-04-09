@@ -14,6 +14,7 @@ import engine.network.*;
 import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
+import server.UpdateUserState;
 import server.UserState;
 
 import java.io.IOException;
@@ -58,17 +59,23 @@ public class TestGame extends Game {
         if (isMultiplayer)
             updateMultiplayer();
 
+        if(testPlayer != null)
+            testPlayer.setPosition(zewnetrznyWektorDoWstawienia);
+
         //System.out.println("Pozycja gracza: " + player.getPosition());
     }
 
 
     GameObject testPlayer = null;
 
+    Vector3f zewnetrznyWektorDoWstawienia = new Vector3f(400,0f,400);
+
     private void updateMultiplayer() {
 
-
+        int count = 5;
         // WYKONYWANIE POLECEN SERWERA
-        while (EventQueue.queue.size() > 0) {
+        while (EventQueue.queue.size() > 0 && count > 0) {
+            count --;
             NetworkEvent event = EventQueue.queue.poll();
 
             switch (event.Type) {
@@ -78,13 +85,14 @@ public class TestGame extends Game {
                 }
                 case NetworkEvent.PLAYER_MOVE: {
                     UserState state = (UserState) event.Data;
-                    System.out.println(state.getUserID().equals(playerUserID));
+                    if(state.getUserID().equals(playerUserID))
+                        System.out.println("Odebrano obiekt gracza lokalnego.");
+                    else System.out.println("Odebrano obiekt gracza zewnetrznego.");
                     if(!state.getUserID().equals(playerUserID)) {
                         if (testPlayer != null) {
-                            updateExternalPlayer(state);
+                            zewnetrznyWektorDoWstawienia = state.getPosition();
                         } else {
                             testPlayer = createExternalPlayer(state.getPosition(), state.getRotation());
-                            //  players.put(state.getUserID(), p);
                         }
                     }
                     break;
@@ -93,7 +101,6 @@ public class TestGame extends Game {
         }
 
         // WYSYLANIE INFO DO SERWERA
-
         UserState playerState = new UserState();
         playerState.setPosition(player.getPosition());
         playerState.setRotation(player.getRotation());
@@ -103,16 +110,14 @@ public class TestGame extends Game {
         PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
         if (baseComponent == null)
             throw new IllegalStateException("Player base component == null during sending data to server.");
-        //playerState.setHp(baseComponent.getHp());
-//
-//        try {
-//            out.writeInt(Constants.OpCode.USER_STATE);
-//            out.writeObject(playerState);
-//            out.flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        executorService.submit(new UpdatePlayerState(out, playerState));
+        try {
+            out.writeInt(Constants.OpCode.USER_STATE);
+            out.writeObject(playerState);
+            out.flush();
+            System.out.println("Wyslano obiekt gracza lokalnego.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {

@@ -85,9 +85,12 @@ public class TestGame extends Game {
                 }
                 case NetworkEvent.PLAYER_MOVE: {
                     UserState state = (UserState) event.Data;
-                    if(state.getUserID().equals(playerUserID))
-                        System.out.println("Odebrano obiekt gracza lokalnego.");
-                    else System.out.println("Odebrano obiekt gracza zewnetrznego.");
+                    if(state.getUserID().equals(playerUserID)){
+                        System.out.println("Odebrano obiekt gracza lokalnego. " + state.getPosition() + " auktualna pozycja gracza w grze:" + player.getPosition());
+                        player.setPosition(state.getPosition());
+                    }
+                    else if(state.getPosition() != null && testPlayer != null)
+                        System.out.println("Odebrano obiekt gracza zewnetrznego." + state.getPosition() + " auktualna pozycja gracza w grze:" + testPlayer.getPosition());
                     if(!state.getUserID().equals(playerUserID)) {
                         if (testPlayer != null) {
                             zewnetrznyWektorDoWstawienia = state.getPosition();
@@ -114,7 +117,7 @@ public class TestGame extends Game {
             out.writeInt(Constants.OpCode.USER_STATE);
             out.writeObject(playerState);
             out.flush();
-            System.out.println("Wyslano obiekt gracza lokalnego.");
+            System.out.println("Wyslano obiekt gracza lokalnego." + playerState.getPosition());
         } catch (IOException e) {
             e.printStackTrace();
         }

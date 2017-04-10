@@ -1,12 +1,10 @@
 package game;
 
+import demo.DemoGame;
 import engine.base.CoreEngine;
 import org.lwjgl.LWJGLUtil;
 
 import java.io.File;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by Maciek on 12.07.2016.
@@ -35,6 +33,11 @@ public class GameLauncher {
         if (jgllib != null)
             System.setProperty("org.lwjgl.librarypath", jgllib.getAbsolutePath());
 
-        new CoreEngine(new TestGame()); // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
+        new CoreEngine(
+                //new TestGame()
+                new DemoGame()
+                );
+
+        // TODO: Jeśli nie połączy z serwerem, to nie włączy gry
     }
 }

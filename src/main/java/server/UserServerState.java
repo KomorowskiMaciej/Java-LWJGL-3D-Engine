@@ -4,9 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,13 +35,16 @@ public class UserServerState {
 
     void sendGameState(Collection<UserServerState> userStateList) {
         userStateList.parallelStream().forEach(userServerState -> {
-                    try {
-                        out.writeInt(Constants.OpCode.USER_STATE);
-                        out.writeObject(userServerState.userState);
-                        out.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            executorService.submit(() -> {
+                try {
+                    out.writeInt(Constants.OpCode.USER_STATE);
+                    out.writeObject(userServerState.userState);
+                    out.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+                    
         });
     }
     UserState getUserState() {

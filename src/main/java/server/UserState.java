@@ -43,9 +43,12 @@ public class UserState implements Serializable {
     public String toString() {
         return "UserState{" +
                 "userID='" + getUserID() + '\'' +
-                ", hp=" + getHp() +
+                "vector[x= "+position.getX()+
+                ",y= "+position.getY()+
+                "], hp=" + getHp() +
                 '}';
     }
+    
 
 
     public Vector3f getPosition() {

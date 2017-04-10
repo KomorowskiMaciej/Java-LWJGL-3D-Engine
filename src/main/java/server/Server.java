@@ -5,14 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static server.Constants.SERVER_BROADCAST_RATE_MILLISECOND;
 
@@ -23,14 +21,13 @@ import static server.Constants.SERVER_BROADCAST_RATE_MILLISECOND;
 @SuppressWarnings("InfiniteLoopStatement")
 class Server {
 
-    private Logger logger = Logger.getLogger(Server.class.getCanonicalName());
     private ConcurrentHashMap<String, UserServerState> userServerStates = new ConcurrentHashMap<>();
     private ScheduledExecutorService broadcastingExecutor = Executors.newScheduledThreadPool(1);
 
     void listenOn(int port) throws IOException {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            logger.info(String.format("Listening on port %d", port));
+            System.out.println(String.format("Listening on port %d", port));
 
             while (!Thread.interrupted()) {
 
@@ -42,26 +39,26 @@ class Server {
 
     private void process(Socket socket) {
 
-        logger.info("Process socket from: " + socket.getInetAddress().getHostAddress());
+        System.out.println("Process socket from: " + socket.getInetAddress().getHostAddress());
 
         try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
             while (!Thread.interrupted()) {
                 int opCode = in.readInt();
-                logger.info(String.format("Received opCode %d", opCode));
+                System.out.println(String.format("Received opCode %d", opCode));
                 switch (opCode) {
                     case Constants.OpCode.LOGIN: {
                         String newUserID = UUID.randomUUID().toString();
-                        logger.info(String.format("Login new user with userID %s", newUserID));
+                        System.out.println(String.format("Login new user with userID %s", newUserID));
                         UserServerState userServerState = new UserServerState(newUserID, out);
                         userServerStates.put(newUserID, userServerState);
 
                         out.writeInt(Constants.OpCode.LOGIN);
                         out.flush();
-                        logger.info("Wrote int");
+                        System.out.println("Wrote int");
                         out.writeObject(userServerState.getUserState());
                         out.flush();
-                        logger.info(String.format("Wrote login %s", newUserID));
+                        System.out.println(String.format("Wrote login %s", newUserID));
 
                     }
                     break;
@@ -71,7 +68,7 @@ class Server {
                             UserState userState = (UserState) in.readObject();
                             userState.print();
                             UserServerState userServerState = userServerStates.get(userState.getUserID());
-                            logger.info(String.format("Update %s %s", userState.getUserID(), userState.toString()));
+                            System.out.println(String.format("Update %s %s", userState.getUserID(), userState.toString()));
                             userServerState.getExecutor().submit(new UpdateUserState(userServerState, userState)); //Execute update userServerState method in user's executor
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -89,9 +86,8 @@ class Server {
 
     void startBroadcasting() {
         broadcastingExecutor.scheduleAtFixedRate(() -> {
-            Iterator iterator = userServerStates.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry pair = (Map.Entry) iterator.next();
+            for (Object entry : userServerStates.entrySet()) {
+                Map.Entry pair = (Map.Entry) entry;
                 UserServerState userServerState = (UserServerState) pair.getValue();
                 userServerState.sendGameState(userServerStates.values());
             }

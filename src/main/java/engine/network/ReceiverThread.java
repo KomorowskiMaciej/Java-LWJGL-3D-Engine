@@ -1,22 +1,21 @@
 package engine.network;
 
+import javafx.concurrent.Task;
 import server.Constants;
 import server.UserState;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class ReceiverThread implements Runnable {
+public class ReceiverThread extends Task<Void> {
     private ObjectInputStream inputStream;
-
 
     public ReceiverThread(ObjectInputStream inputStream) {
         this.inputStream = inputStream;
-
     }
 
     @Override
-    public void run() {
+    protected Void call() throws Exception {
         try {
             while (!Thread.interrupted()) {
                 int opcode = inputStream.readInt();
@@ -31,6 +30,6 @@ public class ReceiverThread implements Runnable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 }

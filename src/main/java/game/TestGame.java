@@ -11,11 +11,9 @@ import engine.modules.resourceMenegment.containers.TerrainTexture;
 import engine.modules.resourceMenegment.containers.TerrainTexturePack;
 import engine.modules.resourceMenegment.containers.Texture;
 import engine.network.*;
-import org.lwjgl.Sys;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
-import server.UpdateUserState;
-import server.UserState;
+import server.GamePackage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,6 +21,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +33,7 @@ public class TestGame extends Game {
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public ConcurrentLinkedQueue<NetworkEvent> queue = new ConcurrentLinkedQueue<>();
     private HashMap<String, GameObject> players = new HashMap<>();
     Model playerModel = null;
     private GameObject player = null;
@@ -61,8 +61,6 @@ public class TestGame extends Game {
 
         if(testPlayer != null)
             testPlayer.setPosition(zewnetrznyWektorDoWstawienia);
-
-        //System.out.println("Pozycja gracza: " + player.getPosition());
     }
 
 
@@ -72,30 +70,26 @@ public class TestGame extends Game {
 
     private void updateMultiplayer() {
 
-        int count = 5;
         // WYKONYWANIE POLECEN SERWERA
-        while (EventQueue.queue.size() > 0 && count > 0) {
-            count --;
-            NetworkEvent event = EventQueue.queue.poll();
+        while (queue.size() > 0) {
+            NetworkEvent event = queue.poll();
 
             switch (event.Type) {
-                case NetworkEvent.LOGIN: {
-                    setPlayerStartStates((UserState) event.Data);
-                    break;
-                }
                 case NetworkEvent.PLAYER_MOVE: {
-                    UserState state = (UserState) event.Data;
-                    if(state.getUserID().equals(playerUserID)){
+                    GamePackage state = (GamePackage) event.Data;
+                    if(state.getUserID().equals(playerUserID))
                         System.out.println("Odebrano obiekt gracza lokalnego. " + state.getPosition() + " auktualna pozycja gracza w grze:" + player.getPosition());
-                        player.setPosition(state.getPosition());
-                    }
-                    else if(state.getPosition() != null && testPlayer != null)
-                        System.out.println("Odebrano obiekt gracza zewnetrznego." + state.getPosition() + " auktualna pozycja gracza w grze:" + testPlayer.getPosition());
-                    if(!state.getUserID().equals(playerUserID)) {
+
+                    else if(state.getPosition() != null){
+
                         if (testPlayer != null) {
-                            zewnetrznyWektorDoWstawienia = state.getPosition();
+                            System.out.println("Pozycja z pakietu: " + state.getPosition() + " auktualna pozycja gracza w grze:" + testPlayer.getPosition());
+                            zewnetrznyWektorDoWstawienia = new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z);
                         } else {
-                            testPlayer = createExternalPlayer(state.getPosition(), state.getRotation());
+                            testPlayer = createExternalPlayer(
+                                    new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z),
+                                    state.getRotation()
+                            );
                         }
                     }
                     break;
@@ -104,20 +98,15 @@ public class TestGame extends Game {
         }
 
         // WYSYLANIE INFO DO SERWERA
-        UserState playerState = new UserState();
-        playerState.setPosition(player.getPosition());
-        playerState.setRotation(player.getRotation());
-        playerState.setUserID(playerUserID);
-        playerState.setHp(100);
+        GamePackage playerState = new GamePackage(Constants.OpCode.USER_STATE, playerUserID, new Vector3f(player.getPosition().x, player.getPosition().y, player.getPosition().z), player.getRotation(), 100);
+        System.out.println(playerState.getPosition());
 
-        PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
-        if (baseComponent == null)
-            throw new IllegalStateException("Player base component == null during sending data to server.");
+    //    PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
+     //   if (baseComponent == null)
+      //      throw new IllegalStateException("Player base component == null during sending data to server.");
         try {
-            out.writeInt(Constants.OpCode.USER_STATE);
             out.writeObject(playerState);
             out.flush();
-            System.out.println("Wyslano obiekt gracza lokalnego." + playerState.getPosition());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,18 +115,17 @@ public class TestGame extends Game {
     public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {
         GameObject p = new GameObject(position, rotation, new Vector3f(5, 5, 5));
         p.AddComponent(new MeshRendererComponent(playerModel, 0));
-        //p.AddComponent(new PlayerComponent());
         gameObjects.add(p);
-        return player;
+        return p;
     }
 
 private String playerUserID = null;
-    public void setPlayerStartStates(UserState state) {
-//
-//        if (state.getPosition() == null || state.getRotation() == null)
-//            throw new IllegalStateException("UserState can't passes nulls.");
-//        player.setPosition(state.getPosition());
-//        player.setRotation(state.getRotation());
+    public void setPlayerStartStates(GamePackage state) {
+
+        if (state.getPosition() == null || state.getRotation() == null)
+            throw new IllegalStateException("GamePackage can't passes nulls.");
+        player.setPosition(state.getPosition());
+        player.setRotation(state.getRotation());
         playerUserID = state.getUserID();
 //
 //        PlayerComponent c = player.getComponent(PlayerComponent.class);
@@ -146,11 +134,11 @@ private String playerUserID = null;
 //        c.setHp(state.getHp());
     }
 
-    public void updateExternalPlayer(UserState state) {
+    public void updateExternalPlayer(GamePackage state) {
 
             // walidacja
             if (state.getPosition() == null || state.getRotation() == null) {
-                throw new IllegalStateException("UserState can't passes nulls.");
+                throw new IllegalStateException("GamePackage can't passes nulls.");
             }
 
             //GameObject gameObject = players.get(state.getUserID());
@@ -175,7 +163,7 @@ private String playerUserID = null;
             in = new ObjectInputStream(socket.getInputStream());
 
             login(out, in); // synchronous process -> block thread until successfully log in
-            executorService.submit(new ReceiverThread(in)); // Start listening for server's userStates broadcasting
+            executorService.submit(new ReceiverThread(in, queue)); // Start listening for server's userStates broadcasting
             isMultiplayer = true;
 
         } catch (IOException e) {
@@ -196,24 +184,24 @@ private String playerUserID = null;
         player.AddComponent(new PlayerComponent());
     }
 
-
-    // todo: refactor
-
-    private static void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
-        out.writeInt(Constants.OpCode.LOGIN);
+    private void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
+        out.writeObject(new GamePackage(Constants.OpCode.LOGIN));
         out.flush();
 
-        int opCode = in.readInt();
-        if (opCode == Constants.OpCode.LOGIN) {
-            try {
-                UserState newUserState = (UserState) in.readObject();
-                EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.LOGIN, newUserState));
-                System.out.println("Loggned in");
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else
-            throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", opCode));
+        try {
+            GamePackage returnLoginPackage = (GamePackage) in.readObject();
+
+            if(returnLoginPackage.getOpCode() != Constants.OpCode.LOGIN)
+                throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", returnLoginPackage.getOpCode()));
+
+            if(returnLoginPackage.getRotation() == null || returnLoginPackage.getRotation() == null)
+                throw new FailedLoginException(String.format("Login return package have null required fields!"));
+
+            setPlayerStartStates(returnLoginPackage);
+            System.out.println("Loggned in");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

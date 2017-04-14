@@ -1,36 +1,35 @@
 package engine.network;
 
 import server.Constants;
-import server.UserState;
+import server.GamePackage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ReceiverThread implements Runnable {
     private ObjectInputStream inputStream;
+    private ConcurrentLinkedQueue<NetworkEvent> queue;
 
 
-    public ReceiverThread(ObjectInputStream inputStream) {
+    public ReceiverThread(ObjectInputStream inputStream, ConcurrentLinkedQueue<NetworkEvent> queue) {
         this.inputStream = inputStream;
-
+        this.queue = queue;
     }
 
     @Override
     public void run() {
         try {
             while (!Thread.interrupted()) {
-                int opcode = inputStream.readInt();
-                if (opcode == Constants.OpCode.USER_STATE) {
-                    //System.out.println("USER_STATE");
-                    UserState state = (UserState) inputStream.readObject();
-                    EventQueue.queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, state));
+                GamePackage gamePackage = (GamePackage) inputStream.readObject();
+                if (gamePackage.getOpCode() == Constants.OpCode.USER_STATE) {
+                    queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, gamePackage));
                 } else
-                    throw new WrongOpCodeException(Constants.OpCode.USER_STATE,opcode);
+                    throw new IllegalStateException("Wrong opcode.");
 
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 }

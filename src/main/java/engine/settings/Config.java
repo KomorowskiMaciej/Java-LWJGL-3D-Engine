@@ -13,8 +13,8 @@ public class Config {
     private static final String RES_PATH = "res/";
 
 
-    private static final int WINDOW_WIDTH = 1280;
-    private static final int WINDOW_HEIGHT = 720;
+    private static final int WINDOW_WIDTH = 720;
+    private static final int WINDOW_HEIGHT = 400;
 
 
     private static final int FPS_CAP = 120;

@@ -48,7 +48,7 @@ public class TestGame extends Game {
         // LIGHTS
         setUpLights();
         // PLAYER
-        createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), true);
+        createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
         // CAMERA
         setUpCamera();
         // MULTIPLAYER
@@ -58,15 +58,7 @@ public class TestGame extends Game {
     public void update() {
         if (isMultiplayer)
             updateMultiplayer();
-
-        if(testPlayer != null)
-            testPlayer.setPosition(zewnetrznyWektorDoWstawienia);
     }
-
-
-    GameObject testPlayer = null;
-
-    Vector3f zewnetrznyWektorDoWstawienia = new Vector3f(400,0f,400);
 
     private void updateMultiplayer() {
 
@@ -75,22 +67,28 @@ public class TestGame extends Game {
             NetworkEvent event = queue.poll();
 
             switch (event.Type) {
-                case NetworkEvent.PLAYER_MOVE: {
+                case Constants.OpCode.USER_STATE: {
                     GamePackage state = (GamePackage) event.Data;
-                    if(state.getUserID().equals(playerUserID))
-                        System.out.println("Odebrano obiekt gracza lokalnego. " + state.getPosition() + " auktualna pozycja gracza w grze:" + player.getPosition());
+                    if(!state.getUserID().equals(playerUserID) &&state.getPosition() != null){
 
-                    else if(state.getPosition() != null){
-
-                        if (testPlayer != null) {
-                            System.out.println("Pozycja z pakietu: " + state.getPosition() + " auktualna pozycja gracza w grze:" + testPlayer.getPosition());
-                            zewnetrznyWektorDoWstawienia = new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z);
+                        if (players.containsKey(state.getUserID())) {
+                            GameObject go = players.get(state.getUserID());
+                            go.setPosition(new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z));
+                            go.setRotation(new Vector3f(state.getRotation().x, state.getRotation().y, state.getRotation().z));
                         } else {
-                            testPlayer = createExternalPlayer(
+                            players.put(state.getUserID(),createExternalPlayer(
                                     new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z),
-                                    state.getRotation()
+                                    new Vector3f(state.getRotation().x, state.getRotation().y, state.getRotation().z)
+                                    )
                             );
                         }
+                    }
+                    break;
+                }
+                case Constants.OpCode.USER_LOGOUT: {
+                    GamePackage state = (GamePackage) event.Data;
+                    if(!state.getUserID().equals(playerUserID)){
+                       deleteExternalPlayer(playerUserID);
                     }
                     break;
                 }
@@ -98,13 +96,11 @@ public class TestGame extends Game {
         }
 
         // WYSYLANIE INFO DO SERWERA
-        GamePackage playerState = new GamePackage(Constants.OpCode.USER_STATE, playerUserID, new Vector3f(player.getPosition().x, player.getPosition().y, player.getPosition().z), player.getRotation(), 100);
-        System.out.println(playerState.getPosition());
-
-    //    PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
-     //   if (baseComponent == null)
-      //      throw new IllegalStateException("Player base component == null during sending data to server.");
+        PlayerComponent baseComponent = player.getComponent(PlayerComponent.class);
+        if (baseComponent == null)
+            throw new IllegalStateException("Player base component == null during sending data to server.");
         try {
+            GamePackage playerState = new GamePackage(Constants.OpCode.USER_STATE, playerUserID, new Vector3f(player.getPosition().x, player.getPosition().y, player.getPosition().z), player.getRotation(), baseComponent.getHp());
             out.writeObject(playerState);
             out.flush();
         } catch (IOException e) {
@@ -119,6 +115,13 @@ public class TestGame extends Game {
         return p;
     }
 
+    public void deleteExternalPlayer(String UserID){
+        if(players.containsKey(UserID)){
+            gameObjects.remove(players.get(UserID));
+            players.remove(UserID);
+        }
+    }
+
 private String playerUserID = null;
     public void setPlayerStartStates(GamePackage state) {
 
@@ -127,33 +130,11 @@ private String playerUserID = null;
         player.setPosition(state.getPosition());
         player.setRotation(state.getRotation());
         playerUserID = state.getUserID();
-//
-//        PlayerComponent c = player.getComponent(PlayerComponent.class);
-//        if (c == null)
-//            throw new IllegalStateException("FirstPersonMovementComponent hasnt found in player object");
-//        c.setHp(state.getHp());
-    }
 
-    public void updateExternalPlayer(GamePackage state) {
-
-            // walidacja
-            if (state.getPosition() == null || state.getRotation() == null) {
-                throw new IllegalStateException("GamePackage can't passes nulls.");
-            }
-
-            //GameObject gameObject = players.get(state.getUserID());
-            if (testPlayer == null) {
-                throw new IllegalStateException("State.UserId doesnt match to any player.");
-            }
-
-            testPlayer.setPosition(state.getPosition());
-           // PlayerComponent playerComponent = gameObject.getComponent(PlayerComponent.class);
-
-           // assert playerComponent != null;
-
-//            playerComponent.setHp(state.getHp());
-
-
+       PlayerComponent c = player.getComponent(PlayerComponent.class);
+       if (c == null)
+            throw new IllegalStateException("FirstPersonMovementComponent hasnt found in player object");
+        c.setHp(state.getHp());
     }
 
     private void setUpMultiplayer() {
@@ -169,8 +150,6 @@ private String playerUserID = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // TODO: 08.04.2017 close streams somewhere albo jebać
-
     }
 
     private void createPlayer(Vector3f position, Vector3f rotation, boolean renderMesh) {
@@ -185,13 +164,13 @@ private String playerUserID = null;
     }
 
     private void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
-        out.writeObject(new GamePackage(Constants.OpCode.LOGIN));
+        out.writeObject(new GamePackage(Constants.OpCode.USER_LOGIN));
         out.flush();
 
         try {
             GamePackage returnLoginPackage = (GamePackage) in.readObject();
 
-            if(returnLoginPackage.getOpCode() != Constants.OpCode.LOGIN)
+            if(returnLoginPackage.getOpCode() != Constants.OpCode.USER_LOGIN)
                 throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", returnLoginPackage.getOpCode()));
 
             if(returnLoginPackage.getRotation() == null || returnLoginPackage.getRotation() == null)

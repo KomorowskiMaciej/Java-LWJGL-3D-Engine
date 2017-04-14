@@ -14,7 +14,8 @@ public class Constants {
     static final int SERVER_BROADCAST_RATE_MILLISECOND = 16;
 
     public class OpCode {
-        public static final int LOGIN = 0;
+        public static final int USER_LOGIN = 0;
         public static final int USER_STATE = 1;
+        public static final int USER_LOGOUT = 2;
     }
 }

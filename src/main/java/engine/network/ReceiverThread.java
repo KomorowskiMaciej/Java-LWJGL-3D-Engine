@@ -23,8 +23,10 @@ public class ReceiverThread implements Runnable {
             while (!Thread.interrupted()) {
                 GamePackage gamePackage = (GamePackage) inputStream.readObject();
                 if (gamePackage.getOpCode() == Constants.OpCode.USER_STATE) {
-                    queue.add(new NetworkEvent<>(NetworkEvent.PLAYER_MOVE, gamePackage));
-                } else
+                    queue.add(new NetworkEvent<>(Constants.OpCode.USER_STATE, gamePackage));
+                } else if (gamePackage.getOpCode() == Constants.OpCode.USER_LOGOUT){
+                    queue.add(new NetworkEvent<>(Constants.OpCode.USER_LOGOUT, gamePackage));
+                }else
                     throw new IllegalStateException("Wrong opcode.");
 
             }

@@ -3,6 +3,7 @@ package server;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  * Created by macias on 14.04.2017.
@@ -13,6 +14,7 @@ public class ServerGameObject {
     private Vector3f position;
     private Vector3f rotation;
     private ObjectOutputStream out;
+    private Socket socket;
 
     ServerGameObject(String userID, ObjectOutputStream out){
         this.userID = userID;
@@ -21,7 +23,7 @@ public class ServerGameObject {
         this.out = out;
     }
 
-    ServerGameObject(String userID, Vector3f position, Vector3f rotation, ObjectOutputStream out){
+    ServerGameObject(String userID, Vector3f position, Vector3f rotation, ObjectOutputStream out, Socket socket){
         this.userID = userID;
         this.position = position;
         this.rotation = rotation;
@@ -64,5 +66,13 @@ public class ServerGameObject {
     }
     public void setOut(ObjectOutputStream out) {
         this.out = out;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 }

@@ -1,6 +1,5 @@
 package server;
 
-import engine.network.NetworkEvent;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.IOException;
@@ -8,8 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
@@ -50,41 +47,34 @@ class Server {
             while (!Thread.interrupted()) {
 
                     GamePackage gamePackage = (GamePackage) in.readObject();
-                    logger.info(String.format("Received opCode %d", gamePackage.getOpCode()));
-
                     switch (gamePackage.getOpCode()) {
-                        case Constants.OpCode.LOGIN: {
+                        case Constants.OpCode.USER_LOGIN: {
                             String newUserID = UUID.randomUUID().toString();
-                            logger.info(String.format("Recieved login request, created user id: %s", newUserID));
+                            logger.info(String.format("New login request, created user id: %s", newUserID));
 
                             ServerGameObject serverGameObject = new ServerGameObject(newUserID,new Vector3f(400, 0,400),
-                                    new Vector3f(0, 0,0), out);
+                                    new Vector3f(0, 0,0), out, socket);
                             serverGameObjects.put(newUserID, serverGameObject);
 
                             out.writeObject(
                                     new GamePackage(
-                                            Constants.OpCode.LOGIN,
+                                            Constants.OpCode.USER_LOGIN,
                                             serverGameObject.getUserID(),
                                             new Vector3f(400, 0,400),
                                             new Vector3f(0, 0,0),
                                             100
                                     ));
                             out.flush();
-                            logger.info(String.format("Login package has been sent, user id: %s", newUserID));
                         }
                         break;
                         case Constants.OpCode.USER_STATE: {
-                            System.out.println("Recieved user state package. Queue size = "+ incomingInfoQueue.size() +
-                                    " Position: " + gamePackage.getPosition() +
-                                    " Rotation: " + gamePackage.getRotation()
-                            );
                             incomingInfoQueue.add(gamePackage);
                         }
                         break;
                     }
             }
-        } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
+        } catch (ClassNotFoundException | IOException e){
+
         }
     }
 
@@ -115,22 +105,24 @@ class Server {
                 serverGameObjects.replace(serverGameObject.getUserID(), serverGameObject);
             }
 
-            serverGameObjects.forEach((k,v)->{
-                    serverGameObjects.forEach((a,b)->{
+            serverGameObjects.forEach((k,v)-> serverGameObjects.forEach((a,b)->{
                         try {
-                            if(!v.getUserID().equals(b.getUserID())){
-                                v.getOut().writeObject(new GamePackage(Constants.OpCode.USER_STATE, b.getUserID(), b.getPosition(), b.getRotation(), 100));
-                                v.getOut().flush();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            v.getOut().writeObject(new GamePackage(Constants.OpCode.USER_STATE, b.getUserID(), b.getPosition(), b.getRotation(), 100));
+                            v.getOut().flush();
+                        }catch (IOException e) {
+                            logger.info(String.format("Player %s, has been disconnected.", v.getUserID()));
+                            String id = v.getUserID();
+                            serverGameObjects.remove(id);
+                            serverGameObjects.forEach((k2,v2)->{
+                                try {
+                                    v2.getOut().writeObject(new GamePackage(Constants.OpCode.USER_LOGOUT, id));
+                                    v2.getOut().flush();
+                                } catch (IOException e1) {
+                                    e1.printStackTrace();
+                                }
+                            });
                         }
-                        System.out.println("broadcast sent");
-                    });
-
-            });
+                    }));
         }, 0, SERVER_BROADCAST_RATE_MILLISECOND, TimeUnit.MILLISECONDS);
     }
-
-
 }

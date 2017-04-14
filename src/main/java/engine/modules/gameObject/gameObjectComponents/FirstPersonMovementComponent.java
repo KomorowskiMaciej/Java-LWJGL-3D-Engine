@@ -31,16 +31,16 @@ public class FirstPersonMovementComponent extends GameObjectComponent {
 
     @Override
     public void input() {
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             this.currentSpeed = RUN_SPEED;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
             this.currentSpeed = -RUN_SPEED;
         } else this.currentSpeed = 0;
 
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            this.currentTurnSpeed = -TURN_SPEED;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
             this.currentTurnSpeed = TURN_SPEED;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+            this.currentTurnSpeed = -TURN_SPEED;
         } else currentTurnSpeed = 0;
 
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
@@ -51,12 +51,10 @@ public class FirstPersonMovementComponent extends GameObjectComponent {
 
     @Override
     public void update() {
-        //getGameObject().increaseRotation(0, currentTurnSpeed * Window.getDeltaTime(), 0);
-
         getGameObject().setRotation(new Vector3f(
-                getGameObject().getRotation().getX(),
-                -camera.getGameObject().getRotation().getY(),
-                getGameObject().getRotation().getZ())
+                0,
+                180- camera.getGameObject().getRotation().getY(),
+                0)
         );
 
         float distance = currentSpeed * Window.getDeltaTime();

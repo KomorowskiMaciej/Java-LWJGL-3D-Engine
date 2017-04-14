@@ -27,7 +27,7 @@ public class FirstPersonCamera extends CameraBaseComponent {
         float horizontalDistance = calculateHorizontalDistance();
         float vecticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance, vecticalDistance, player, angleAroundPlayer);
-        getGameObject().getRotation().y = 360 - (angleAroundPlayer);
+        getGameObject().getRotation().y = angleAroundPlayer;
     }
 
     public void input() {
@@ -44,7 +44,7 @@ public class FirstPersonCamera extends CameraBaseComponent {
         float pitchChange = Mouse.getDY() * 0.1f;
         getGameObject().getRotation().x -= pitchChange;
         float angleChange = Mouse.getDX() * 0.3f;
-        angleAroundPlayer -= angleChange;
+        angleAroundPlayer += angleChange;
     }
 
     private float calculateHorizontalDistance() {

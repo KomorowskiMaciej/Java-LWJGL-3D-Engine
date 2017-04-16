@@ -1,22 +1,21 @@
 package game;
 
 import engine.base.Game;
-import engine.modules.animation.animatedModel.AnimatedModel;
-import engine.modules.animation.animation.Animation;
-import engine.modules.animation.loaders.AnimatedModelLoader;
-import engine.modules.animation.loaders.AnimationLoader;
-import engine.modules.gameObject.GameObject;
-import engine.modules.gameObject.gameObjectComponents.*;
+import engine.base.resourceManagment.containers.animation.AnimatedModel;
+import engine.base.resourceManagment.containers.animation.Animation;
+import engine.base.resourceManagment.animationLoader.AnimatedModelLoader;
+import engine.base.resourceManagment.animationLoader.AnimationLoader;
+import engine.base.gameObject.GameObject;
+import engine.base.gameObject.gameObjectComponents.*;
 import engine.modules.light.Light;
-import engine.modules.resourceManagment.Loader;
-import engine.modules.resourceManagment.OBJLoader;
-import engine.modules.resourceManagment.containers.Model;
-import engine.modules.resourceManagment.containers.TerrainTexture;
-import engine.modules.resourceManagment.containers.TerrainTexturePack;
-import engine.modules.resourceManagment.containers.Texture;
+import engine.base.resourceManagment.Loader;
+import engine.base.resourceManagment.objParser.OBJLoader;
+import engine.base.resourceManagment.containers.model.Model;
+import engine.base.resourceManagment.containers.texture.TerrainTexture;
+import engine.base.resourceManagment.containers.texture.TerrainTexturePack;
+import engine.base.resourceManagment.containers.texture.Texture;
 import engine.modules.network.*;
-import engine.toolbox.MyFile;
-import engine.toolbox.OpenGlUtils;
+import engine.base.resourceManagment.containers.file.ResourceFile;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
 import server.GamePackage;
@@ -63,11 +62,15 @@ public class TestGame extends Game {
     //    OpenGlUtils.goWireframe(true);
 
 
-        AnimatedModel entity = AnimatedModelLoader.loadEntity(new MyFile("res/dae/model2.dae"),
-                new MyFile("res/textures/animatedModel.png"));
-        Animation animation = AnimationLoader.loadAnimation(new MyFile("res/dae/model2.dae"));
+        AnimatedModel entity = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"),
+                new ResourceFile("res/textures/animatedModel.png"));
+        Animation animation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/model2.dae"));
         entity.doAnimation(animation);
         setAnimatedModel(entity);
+
+        GameObject testObject = new GameObject(new Vector3f(405,-10, 400),new Vector3f(0,0,0),new Vector3f(5,5, 5));
+        testObject.AddComponent(new MeshRendererComponent(playerModel, 1));
+        gameObjects.add(testObject);
     }
 
     public void update() {
@@ -225,7 +228,7 @@ private String playerUserID = null;
     }
 
     private void setUpLights() {
-        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
-        setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
+      //  setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
     }
 }

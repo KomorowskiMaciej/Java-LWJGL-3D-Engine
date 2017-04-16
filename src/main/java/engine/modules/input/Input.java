@@ -1,6 +1,6 @@
 package engine.modules.input;
 
-import engine.modules.gameObject.GameObject;
+import engine.base.gameObject.GameObject;
 import org.lwjgl.util.vector.Vector3f;
 
 /**

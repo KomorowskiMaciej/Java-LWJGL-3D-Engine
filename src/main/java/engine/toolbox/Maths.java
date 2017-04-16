@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.modules.gameObject.gameObjectComponents.CameraBaseComponent;
+import engine.base.gameObject.gameObjectComponents.CameraBaseComponent;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

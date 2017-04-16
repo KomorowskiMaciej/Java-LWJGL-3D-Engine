@@ -1,29 +1,25 @@
 package engine.base;
 
-import engine.modules.animation.animatedModel.AnimatedModel;
+import engine.base.resourceManagment.containers.animation.AnimatedModel;
 import engine.modules.animation.renderer.AnimatedModelRenderer;
 import engine.modules.animation.renderer.AnimatedModelShader;
 import engine.modules.fonts.fontMeshCreator.FontType;
 import engine.modules.fonts.fontMeshCreator.GUIText;
 import engine.modules.fonts.fontRendering.FontRenderer;
 import engine.modules.fonts.fontRendering.TextMaster;
-import engine.modules.gameObject.GameObjectsRenderer;
-import engine.modules.gameObject.gameObjectComponents.MeshRendererComponent;
-import engine.modules.gameObject.gameObjectComponents.TerrainRendererComponent;
-import engine.modules.gameObject.gameObjectShader;
+import engine.base.gameObject.GameObjectsRenderer;
+import engine.base.gameObject.gameObjectComponents.MeshRendererComponent;
+import engine.base.gameObject.gameObjectComponents.TerrainRendererComponent;
+import engine.base.gameObject.GameObjectShader;
 import engine.modules.guis.GuiRenderer;
 import engine.modules.guis.GuiTexture;
 import engine.modules.light.Light;
-import engine.modules.resourceManagment.Loader;
-import engine.modules.resourceManagment.containers.Model;
-import engine.modules.shadows.ShadowMapMasterRenderer;
+import engine.base.resourceManagment.Loader;
+import engine.base.resourceManagment.containers.model.Model;
+import engine.base.shadows.ShadowMapMasterRenderer;
 import engine.modules.skybox.SkyboxRenderer;
 import engine.modules.terrain.TerrainRenderer;
 import engine.modules.terrain.TerrainShader;
-import engine.modules.water.WaterFrameBuffers;
-import engine.modules.water.WaterRenderer;
-import engine.modules.water.WaterShader;
-import engine.modules.water.WaterTile;
 import engine.settings.Config;
 import engine.toolbox.Maths;
 import engine.toolbox.OpenGlUtils;
@@ -70,18 +66,15 @@ public class MasterRenderer {
 
     private static MasterRenderer _instance = null;
     private Matrix4f projectionMatrix;
-    private gameObjectShader gameObjectshader = new gameObjectShader();
+    private GameObjectShader gameObjectshader = new GameObjectShader();
     private GameObjectsRenderer gameObjectsRenderer;
     private AnimatedModelRenderer animatedModelRenderer;
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
     private SkyboxRenderer skyboxRenderer;
-    private WaterRenderer waterRenderer;
     private GuiRenderer guiRenderer;
     private FontRenderer fontRenderer;
     private FontType verdana;
-    private WaterShader waterShader = new WaterShader();
-    private WaterFrameBuffers fbos = new WaterFrameBuffers();
     private ShadowMapMasterRenderer shadowMapRenderer;
     private Map<Model, List<MeshRendererComponent>> objectRenderers = new HashMap<>();
     private List<TerrainRendererComponent> terrains = new ArrayList<>();
@@ -92,7 +85,6 @@ public class MasterRenderer {
         gameObjectsRenderer = new GameObjectsRenderer(gameObjectshader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
-        waterRenderer = new WaterRenderer(waterShader, projectionMatrix, fbos);
         animatedModelRenderer = new AnimatedModelRenderer();
         guiRenderer = new GuiRenderer();
         fontRenderer = new FontRenderer();
@@ -126,7 +118,7 @@ public class MasterRenderer {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMaptexture());
     }
 
-    public void render(List<Light> lights, List<WaterTile> waters, List<GuiTexture> guiTextures, List<AnimatedModel> animatedModels) {
+    public void render(List<Light> lights, List<GuiTexture> guiTextures, List<AnimatedModel> animatedModels) {
         renderShadowMap(lights.get(0));
 
         prepare();
@@ -177,8 +169,6 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
 
         terrainShader.stop();
-
-        waterRenderer.render(waters, Game.getCamera(), lights.get(0));
         skyboxRenderer.render(Game.getCamera(), Config.getEnvRgb());
 
         //guiTextures.add(new GuiTexture(getShadowMaptexture(),new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f)));
@@ -218,7 +208,6 @@ public class MasterRenderer {
         gameObjectshader.cleanUp();
         terrainShader.cleanUp();
         shadowMapRenderer.cleanUp();
-        fbos.cleanUp();
     }
 
     private void createProjectionMatrix() {

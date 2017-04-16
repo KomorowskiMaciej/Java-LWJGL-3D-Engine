@@ -3,7 +3,7 @@ package engine.modules.shadows;
 import engine.base.Game;
 import engine.modules.gameObject.gameObjectComponents.MeshRendererComponent;
 import engine.modules.light.Light;
-import engine.modules.resourceMenegment.containers.Model;
+import engine.modules.resourceManagment.containers.Model;
 import engine.settings.Config;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;

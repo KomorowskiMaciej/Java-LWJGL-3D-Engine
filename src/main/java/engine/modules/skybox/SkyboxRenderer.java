@@ -1,8 +1,8 @@
 package engine.modules.skybox;
 
 import engine.modules.gameObject.gameObjectComponents.CameraBaseComponent;
-import engine.modules.resourceMenegment.Loader;
-import engine.modules.resourceMenegment.containers.Mesh;
+import engine.modules.resourceManagment.Loader;
+import engine.modules.resourceManagment.containers.Mesh;
 import engine.settings.Config;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

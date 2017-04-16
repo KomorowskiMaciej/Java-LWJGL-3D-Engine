@@ -1,7 +1,7 @@
 package engine.modules.gameObject.gameObjectComponents;
 
 import engine.base.MasterRenderer;
-import engine.modules.resourceMenegment.containers.Model;
+import engine.modules.resourceManagment.containers.Model;
 
 /**
  * Created by Maciek on 12.07.2016.

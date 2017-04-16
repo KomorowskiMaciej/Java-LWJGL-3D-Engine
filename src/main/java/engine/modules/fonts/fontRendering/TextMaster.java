@@ -3,7 +3,7 @@ package engine.modules.fonts.fontRendering;
 import engine.modules.fonts.fontMeshCreator.FontType;
 import engine.modules.fonts.fontMeshCreator.GUIText;
 import engine.modules.fonts.fontMeshCreator.TextMeshData;
-import engine.modules.resourceMenegment.Loader;
+import engine.modules.resourceManagment.Loader;
 
 import java.util.ArrayList;
 import java.util.HashMap;

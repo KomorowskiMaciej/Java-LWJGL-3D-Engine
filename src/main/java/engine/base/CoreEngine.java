@@ -47,7 +47,7 @@ public class CoreEngine {
 
             for (GameObject gameObject : m_game.getGameObjectList())
                 gameObject.render();
-            renderer.render(m_game.getLights(), m_game.getWaters(), m_game.getGuiTextures());
+            renderer.render(m_game.getLights(), m_game.getWaters(), m_game.getGuiTextures(), m_game.getAnimatedModels());
 
 
             Window.updateDisplay();

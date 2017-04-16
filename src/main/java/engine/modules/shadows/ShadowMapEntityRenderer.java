@@ -2,8 +2,8 @@ package engine.modules.shadows;
 
 import engine.base.MasterRenderer;
 import engine.modules.gameObject.gameObjectComponents.MeshRendererComponent;
-import engine.modules.resourceMenegment.containers.Mesh;
-import engine.modules.resourceMenegment.containers.Model;
+import engine.modules.resourceManagment.containers.Mesh;
+import engine.modules.resourceManagment.containers.Model;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

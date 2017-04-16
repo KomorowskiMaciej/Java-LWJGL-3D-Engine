@@ -1,8 +1,8 @@
 package engine.modules.terrain;
 
 import engine.modules.gameObject.gameObjectComponents.TerrainRendererComponent;
-import engine.modules.resourceMenegment.containers.Mesh;
-import engine.modules.resourceMenegment.containers.TerrainTexturePack;
+import engine.modules.resourceManagment.containers.Mesh;
+import engine.modules.resourceManagment.containers.TerrainTexturePack;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

@@ -2,10 +2,10 @@ package engine.modules.gameObject.gameObjectComponents;
 
 import engine.base.MasterRenderer;
 import engine.modules.gameObject.GameObject;
-import engine.modules.resourceMenegment.Loader;
-import engine.modules.resourceMenegment.containers.Mesh;
-import engine.modules.resourceMenegment.containers.TerrainTexture;
-import engine.modules.resourceMenegment.containers.TerrainTexturePack;
+import engine.modules.resourceManagment.Loader;
+import engine.modules.resourceManagment.containers.Mesh;
+import engine.modules.resourceManagment.containers.TerrainTexture;
+import engine.modules.resourceManagment.containers.TerrainTexturePack;
 import engine.settings.Config;
 import engine.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;

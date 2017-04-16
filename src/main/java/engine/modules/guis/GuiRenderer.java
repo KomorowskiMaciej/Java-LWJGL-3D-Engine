@@ -1,7 +1,7 @@
 package engine.modules.guis;
 
-import engine.modules.resourceMenegment.Loader;
-import engine.modules.resourceMenegment.containers.Mesh;
+import engine.modules.resourceManagment.Loader;
+import engine.modules.resourceManagment.containers.Mesh;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

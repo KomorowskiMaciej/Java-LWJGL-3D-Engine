@@ -1,5 +1,8 @@
 package engine.base;
 
+import engine.modules.animation.animatedModel.AnimatedModel;
+import engine.modules.animation.renderer.AnimatedModelRenderer;
+import engine.modules.animation.renderer.AnimatedModelShader;
 import engine.modules.fonts.fontMeshCreator.FontType;
 import engine.modules.fonts.fontMeshCreator.GUIText;
 import engine.modules.fonts.fontRendering.FontRenderer;
@@ -11,8 +14,8 @@ import engine.modules.gameObject.gameObjectShader;
 import engine.modules.guis.GuiRenderer;
 import engine.modules.guis.GuiTexture;
 import engine.modules.light.Light;
-import engine.modules.resourceMenegment.Loader;
-import engine.modules.resourceMenegment.containers.Model;
+import engine.modules.resourceManagment.Loader;
+import engine.modules.resourceManagment.containers.Model;
 import engine.modules.shadows.ShadowMapMasterRenderer;
 import engine.modules.skybox.SkyboxRenderer;
 import engine.modules.terrain.TerrainRenderer;
@@ -22,39 +25,44 @@ import engine.modules.water.WaterRenderer;
 import engine.modules.water.WaterShader;
 import engine.modules.water.WaterTile;
 import engine.settings.Config;
+import engine.toolbox.Maths;
+import engine.toolbox.OpenGlUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.io.File;
 import java.util.*;
 
+import static engine.toolbox.OpenGlUtils.enableDepthTesting;
+
 
 /*
 
- m   " m" " m  m
-   " m " "m   " " "m m m
- "  m  " "  " "m" " " "m m
-m  m m "  " " " " "m"m"m"m"m"m
-  " m " " "m"m" "m"m"m"m"m"m"m"m
-"m"m m"m" "m m"m"m"m"m"m"m"m"m"m$"m
-     $  " "m"m"m"m"m"m"m"m"m"m$"  $m
-     "          "m"m"m"m"m"m$"  m"m"m
-     $           $"m"m"m"m$"  m"m"  "m
-    m"m          m  "m"m$"  m"m"     "m
-    $ $          $    $"  m"m"        "m
-     "           m    "$m"m"          m"m
-                m"m     $"          m"  $
-                $ $      $        m"  m"
-                "m"       $     m"  m$$
-                           $  m"  m$"  $
-                            $"  m""$    $
-                             """    $    $
-                                     $    $
-                                      $    $
-                                       $    $
+     m   " m" " m  m
+       " m " "m   " " "m m m
+     "  m  " "  " "m" " " "m m
+    m  m m "  " " " " "m"m"m"m"m"m
+      " m " " "m"m" "m"m"m"m"m"m"m"m
+    "m"m m"m" "m m"m"m"m"m"m"m"m"m"m$"m
+         $  " "m"m"m"m"m"m"m"m"m"m$"  $m
+         "          "m"m"m"m"m"m$"  m"m"m
+         $           $"m"m"m"m$"  m"m"  "m
+        m"m          m  "m"m$"  m"m"     "m
+        $ $          $    $"  m"m"        "m
+         "           m    "$m"m"          m"m
+                    m"m     $"          m"  $
+                    $ $      $        m"  m"
+                    "m"       $     m"  m$$
+                               $  m"  m$"  $
+                                $"  m""$    $
+                                 """    $    $
+                                         $    $
+                                          $    $
+                                           $    $
 */
 
 
@@ -64,6 +72,7 @@ public class MasterRenderer {
     private Matrix4f projectionMatrix;
     private gameObjectShader gameObjectshader = new gameObjectShader();
     private GameObjectsRenderer gameObjectsRenderer;
+    private AnimatedModelRenderer animatedModelRenderer;
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
     private SkyboxRenderer skyboxRenderer;
@@ -74,8 +83,8 @@ public class MasterRenderer {
     private WaterShader waterShader = new WaterShader();
     private WaterFrameBuffers fbos = new WaterFrameBuffers();
     private ShadowMapMasterRenderer shadowMapRenderer;
-    private Map<Model, List<MeshRendererComponent>> objectRenderers = new HashMap<Model, List<MeshRendererComponent>>();
-    private List<TerrainRendererComponent> terrains = new ArrayList<TerrainRendererComponent>();
+    private Map<Model, List<MeshRendererComponent>> objectRenderers = new HashMap<>();
+    private List<TerrainRendererComponent> terrains = new ArrayList<>();
 
     private MasterRenderer() {
         enableCulling();
@@ -84,6 +93,7 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
         waterRenderer = new WaterRenderer(waterShader, projectionMatrix, fbos);
+        animatedModelRenderer = new AnimatedModelRenderer();
         guiRenderer = new GuiRenderer();
         fontRenderer = new FontRenderer();
         TextMaster.init();
@@ -109,14 +119,14 @@ public class MasterRenderer {
     }
 
     public void prepare() {
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        enableDepthTesting(true);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(Config.getEnvRgb().x, Config.getEnvRgb().y, Config.getEnvRgb().z, 1);
         GL13.glActiveTexture(GL13.GL_TEXTURE5);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMaptexture());
     }
 
-    public void render(List<Light> lights, List<WaterTile> waters, List<GuiTexture> guiTextures) {
+    public void render(List<Light> lights, List<WaterTile> waters, List<GuiTexture> guiTextures, List<AnimatedModel> animatedModels) {
         renderShadowMap(lights.get(0));
 
         prepare();
@@ -132,7 +142,29 @@ public class MasterRenderer {
         gameObjectsRenderer.render(objectRenderers, shadowMapRenderer.getToShadowMapSpaceMatrix());
         gameObjectshader.stop();
 
+
+        AnimatedModelShader animatedModelShader = new AnimatedModelShader();
+        animatedModelShader.start();
+        animatedModelShader.setProjectionMatrix(projectionMatrix);
+        animatedModelShader.setViewMatrix(Maths.createViewMatrix(Game.getCamera()));
+        animatedModelShader.setLightDirection(new Vector3f(0.2f, -0.3f, -0.8f));
+        OpenGlUtils.antialias(true);
+        OpenGlUtils.disableBlending();
+        OpenGlUtils.enableDepthTesting(true);
+
+        for (AnimatedModel animatedModel : animatedModels) {
+            animatedModelShader.setTransformMatrix(Maths.createTransformationMatrix(
+                    new Vector3f(400f,-10f,400f),
+                    0,0,0,
+                    new Vector3f(1,1,1))
+            );
+            animatedModelRenderer.render(animatedModel);
+        }
+
+        animatedModelShader.stop();
+
         terrainShader.start();
+
         terrainShader.loadSkyColour(Config.getEnvRgb());
         terrainShader.loadLights(lights);
         terrainShader.loadAmbientLight(Config.getAmbientLight());
@@ -143,6 +175,7 @@ public class MasterRenderer {
         terrainShader.loadMapSize(Config.getShadowMapSize());
 
         terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
+
         terrainShader.stop();
 
         waterRenderer.render(waters, Game.getCamera(), lights.get(0));

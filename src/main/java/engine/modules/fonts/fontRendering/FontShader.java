@@ -1,6 +1,8 @@
 package engine.modules.fonts.fontRendering;
 
-import engine.base.ShaderProgram;
+import engine.base.shaders.ShaderProgram;
+import engine.base.shaders.UniformVec2;
+import engine.base.shaders.UniformVec3;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -9,31 +11,20 @@ public class FontShader extends ShaderProgram {
     private static final String VERTEX_FILE = "res/shaders/fontVertex.glsl";
     private static final String FRAGMENT_FILE = "res/shaders/fontFragment.glsl";
 
-    private int location_colour;
-    private int location_translation;
+    private UniformVec3 colour = new UniformVec3("colour");
+    private UniformVec2 translation = new UniformVec2("translation");
 
     public FontShader() {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(VERTEX_FILE, FRAGMENT_FILE, "position", "textureCoords");
+        super.storeAllUniformLocations(colour,translation);
     }
 
-    @Override
-    protected void getAllUniformLocations() {
-        location_colour = super.getUniformLocation("colour");
-        location_translation = super.getUniformLocation("translation");
+    protected void loadColour(Vector3f lcolour) {
+        colour.loadVec3(lcolour);
     }
 
-    @Override
-    protected void bindAttributes() {
-        super.bindAttribute(0, "position");
-        super.bindAttribute(1, "textureCoords");
-    }
-
-    protected void loadColour(Vector3f colour) {
-        super.loadVector(location_colour, colour);
-    }
-
-    protected void loadTranslation(Vector2f translation) {
-        super.load2DVector(location_translation, translation);
+    protected void loadTranslation(Vector2f ltranslation) {
+        translation.loadVec2(ltranslation);
     }
 
 

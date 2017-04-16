@@ -1,8 +1,8 @@
 package engine.modules.input;
 
-import engine.modules.gameObject.GameObject;
-import engine.modules.gameObject.gameObjectComponents.CameraBaseComponent;
-import engine.modules.gameObject.gameObjectComponents.TerrainRendererComponent;
+import engine.base.gameObject.GameObject;
+import engine.base.gameObject.gameObjectComponents.CameraBaseComponent;
+import engine.base.gameObject.gameObjectComponents.TerrainRendererComponent;
 import engine.settings.Config;
 import engine.toolbox.Maths;
 import org.lwjgl.input.Mouse;

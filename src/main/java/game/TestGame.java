@@ -1,16 +1,21 @@
 package game;
 
 import engine.base.Game;
-import engine.modules.gameObject.GameObject;
-import engine.modules.gameObject.gameObjectComponents.*;
+import engine.base.resourceManagment.containers.animation.AnimatedModel;
+import engine.base.resourceManagment.containers.animation.Animation;
+import engine.base.resourceManagment.animationLoader.AnimatedModelLoader;
+import engine.base.resourceManagment.animationLoader.AnimationLoader;
+import engine.base.gameObject.GameObject;
+import engine.base.gameObject.gameObjectComponents.*;
 import engine.modules.light.Light;
-import engine.modules.resourceMenegment.Loader;
-import engine.modules.resourceMenegment.OBJLoader;
-import engine.modules.resourceMenegment.containers.Model;
-import engine.modules.resourceMenegment.containers.TerrainTexture;
-import engine.modules.resourceMenegment.containers.TerrainTexturePack;
-import engine.modules.resourceMenegment.containers.Texture;
-import engine.network.*;
+import engine.base.resourceManagment.Loader;
+import engine.base.resourceManagment.objParser.OBJLoader;
+import engine.base.resourceManagment.containers.model.Model;
+import engine.base.resourceManagment.containers.texture.TerrainTexture;
+import engine.base.resourceManagment.containers.texture.TerrainTexturePack;
+import engine.base.resourceManagment.containers.texture.Texture;
+import engine.modules.network.*;
+import engine.base.resourceManagment.containers.file.ResourceFile;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
 import server.GamePackage;
@@ -50,14 +55,32 @@ public class TestGame extends Game {
         // PLAYER
         createPlayer(new Vector3f(400, 0, 400), new Vector3f(0, 0, 0), false);
         // CAMERA
-        setUpCamera();
+        setUpFirstPersonCamera(player);
         // MULTIPLAYER
-        setUpMultiplayer();
+      //  setUpMultiplayer();
+
+    //    OpenGlUtils.goWireframe(true);
+
+
+        AnimatedModel entity = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"),
+                new ResourceFile("res/textures/animatedModel.png"));
+        Animation animation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/model2.dae"));
+        entity.doAnimation(animation);
+        setAnimatedModel(entity);
+
+        GameObject testObject = new GameObject(new Vector3f(405,-10, 400),new Vector3f(0,0,0),new Vector3f(5,5, 5));
+        testObject.AddComponent(new MeshRendererComponent(playerModel, 1));
+        gameObjects.add(testObject);
     }
 
     public void update() {
         if (isMultiplayer)
             updateMultiplayer();
+
+        for (AnimatedModel model: getAnimatedModels()) {
+            model.update();
+        }
+
     }
 
     private void updateMultiplayer() {
@@ -205,14 +228,7 @@ private String playerUserID = null;
     }
 
     private void setUpLights() {
-        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(0.4f, 0.2f, 0.3f)));
-        setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
-    }
-
-    private void setUpCamera() {
-        GameObject cameraObj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(20, 0, 0), new Vector3f(1, 1, 1));
-        setCamera(new FirstPersonCamera(player));
-        cameraObj.AddComponent(getCamera());
-        gameObjects.add(cameraObj);
+        setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
+      //  setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
     }
 }

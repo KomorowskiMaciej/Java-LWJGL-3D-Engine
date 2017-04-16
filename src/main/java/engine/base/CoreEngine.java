@@ -1,7 +1,7 @@
 package engine.base;
 
-import engine.modules.gameObject.GameObject;
-import engine.modules.gameWindow.Window;
+import engine.base.gameObject.GameObject;
+import engine.base.gameWindow.Window;
 import engine.modules.input.Input;
 import engine.modules.input.MousePicker;
 import org.lwjgl.opengl.Display;
@@ -47,7 +47,7 @@ public class CoreEngine {
 
             for (GameObject gameObject : m_game.getGameObjectList())
                 gameObject.render();
-            renderer.render(m_game.getLights(), m_game.getWaters(), m_game.getGuiTextures());
+            renderer.render(m_game.getLights(), m_game.getGuiTextures(), m_game.getAnimatedModels());
 
 
             Window.updateDisplay();

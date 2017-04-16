@@ -1,5 +1,6 @@
 # Java LWJGL 3D Engine
 
 Instalation:
-1. Rename propet libs-{OS} folder to libs 
-2. Ready to fire
+1. Open as Maven project
+2. Import all dependencies
+3. Ready to use!

@@ -1,7 +1,7 @@
 package engine.base.shadows;
 
 import engine.base.MasterRenderer;
-import engine.base.gameObject.gameObjectComponents.MeshRendererComponent;
+import engine.base.gameObject.gameObjectComponents.ModelComponent;
 import engine.base.resourceManagment.containers.model.Mesh;
 import engine.base.resourceManagment.containers.model.Model;
 import engine.toolbox.Maths;
@@ -25,7 +25,7 @@ public class ShadowMapEntityRenderer {
         this.projectionViewMatrix = projectionViewMatrix;
     }
 
-    protected void render(Map<Model, List<MeshRendererComponent>> entities) {
+    protected void render(Map<Model, List<ModelComponent>> entities) {
         for (Model model : entities.keySet()) {
             Mesh rawModel = model.getRawModel();
             bindModel(rawModel);
@@ -33,7 +33,7 @@ public class ShadowMapEntityRenderer {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
             if (model.getTexture().isHasTransparency())
                 MasterRenderer.disableCulling();
-            for (MeshRendererComponent entity : entities.get(model)) {
+            for (ModelComponent entity : entities.get(model)) {
                 prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(),
                         GL11.GL_UNSIGNED_INT, 0);
@@ -53,13 +53,13 @@ public class ShadowMapEntityRenderer {
         GL20.glEnableVertexAttribArray(1);
     }
 
-    private void prepareInstance(MeshRendererComponent entity) {
+    private void prepareInstance(ModelComponent entity) {
         Matrix4f modelMatrix = Maths.createTransformationMatrix(entity.getGameObject().getPosition(),
                 entity.getGameObject().getRotation().x, entity.getGameObject().getRotation().y, entity.getGameObject().getRotation().z, entity.getGameObject().getScale());
         Matrix4f mvpMatrix = Matrix4f.mul(projectionViewMatrix, modelMatrix, null);
         shader.loadMvpMatrix(mvpMatrix);
         shader.loadOffset(new Vector2f(entity.getTextureXOffset(), entity.getTextureYOffset()));
-        shader.loadNumberOfRows(entity.getTexture().getNumberOfRows());
+        shader.loadNumberOfRows(entity.getModel().getNumberOfRows());
     }
 
 }

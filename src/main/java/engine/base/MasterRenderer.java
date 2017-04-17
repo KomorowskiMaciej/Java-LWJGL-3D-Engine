@@ -1,5 +1,7 @@
 package engine.base;
 
+import engine.base.gameObject.GameObject;
+import engine.base.gameObject.gameObjectComponents.AnimatedModelComponent;
 import engine.base.resourceManagment.containers.animation.AnimatedModel;
 import engine.modules.animation.renderer.AnimatedModelRenderer;
 import engine.modules.animation.renderer.AnimatedModelShader;
@@ -8,7 +10,7 @@ import engine.modules.fonts.fontMeshCreator.GUIText;
 import engine.modules.fonts.fontRendering.FontRenderer;
 import engine.modules.fonts.fontRendering.TextMaster;
 import engine.base.gameObject.GameObjectsRenderer;
-import engine.base.gameObject.gameObjectComponents.MeshRendererComponent;
+import engine.base.gameObject.gameObjectComponents.ModelComponent;
 import engine.base.gameObject.gameObjectComponents.TerrainRendererComponent;
 import engine.base.gameObject.GameObjectShader;
 import engine.modules.guis.GuiRenderer;
@@ -76,7 +78,8 @@ public class MasterRenderer {
     private FontRenderer fontRenderer;
     private FontType verdana;
     private ShadowMapMasterRenderer shadowMapRenderer;
-    private Map<Model, List<MeshRendererComponent>> objectRenderers = new HashMap<>();
+    private Map<Model, List<ModelComponent>> modelComponents = new HashMap<>();
+    private List<AnimatedModelComponent> animatedModelComponents = new ArrayList<>();
     private List<TerrainRendererComponent> terrains = new ArrayList<>();
 
     private MasterRenderer() {
@@ -118,7 +121,7 @@ public class MasterRenderer {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMaptexture());
     }
 
-    public void render(List<Light> lights, List<GuiTexture> guiTextures, List<AnimatedModel> animatedModels) {
+    public void render(List<Light> lights, List<GuiTexture> guiTextures, List<engine.base.resourceManagment.containers.animation.AnimatedModel> animatedModels) {
         renderShadowMap(lights.get(0));
 
         prepare();
@@ -131,7 +134,7 @@ public class MasterRenderer {
         gameObjectshader.loadFogGradient(Config.getFogGradient());
         gameObjectshader.loadPcfCount(Config.getShadowPcfCount());
         gameObjectshader.loadMapSize(Config.getShadowMapSize());
-        gameObjectsRenderer.render(objectRenderers, shadowMapRenderer.getToShadowMapSpaceMatrix());
+        gameObjectsRenderer.render(modelComponents, shadowMapRenderer.getToShadowMapSpaceMatrix());
         gameObjectshader.stop();
 
 
@@ -144,14 +147,17 @@ public class MasterRenderer {
         OpenGlUtils.disableBlending();
         OpenGlUtils.enableDepthTesting(true);
 
-        for (AnimatedModel animatedModel : animatedModels) {
-            animatedModelShader.setTransformMatrix(Maths.createTransformationMatrix(
-                    new Vector3f(400f,-10f,400f),
-                    0,0,0,
-                    new Vector3f(1,1,1))
-            );
-            animatedModelRenderer.render(animatedModel);
-        }
+        animatedModelComponents.forEach(animatedModelComponent -> {
+
+            GameObject go = animatedModelComponent.getGameObject();
+            animatedModelShader.setTransformMatrix(Maths.createTransformationMatrix(go.getPosition(),go.getRotation(), go.getScale()));
+
+            //todo: zrobić to jakoś lepiej
+            animatedModelComponent.getModel().update();
+
+            animatedModelRenderer.render(animatedModelComponent.getModel());
+
+        });
 
         animatedModelShader.stop();
 
@@ -175,7 +181,8 @@ public class MasterRenderer {
         guiRenderer.render(guiTextures);
         TextMaster.render();
         terrains.clear();
-        objectRenderers.clear();
+        modelComponents.clear();
+        animatedModelComponents.clear();
         guiTextures.clear();
     }
 
@@ -183,20 +190,26 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
-    public void processObjectRenderer(MeshRendererComponent renderer) {
-        Model texturedMesh = renderer.getTexture();
-        List<MeshRendererComponent> batch = objectRenderers.get(texturedMesh);
+    public void processModelRenderer(ModelComponent renderer) {
+        Model texturedMesh = renderer.getModel();
+        List<ModelComponent> batch = modelComponents.get(texturedMesh);
         if (batch != null) {
             batch.add(renderer);
         } else {
-            List<MeshRendererComponent> newBatch = new ArrayList<MeshRendererComponent>();
+            List<ModelComponent> newBatch = new ArrayList<ModelComponent>();
             newBatch.add(renderer);
-            objectRenderers.put(texturedMesh, newBatch);
+            modelComponents.put(texturedMesh, newBatch);
         }
     }
 
+    public void processAnimatedModelRenderer(AnimatedModelComponent component) {
+        if(animatedModelComponents == null)
+            animatedModelComponents = new ArrayList<>();
+        animatedModelComponents.add(component);
+    }
+
     public void renderShadowMap(Light sun) {
-        shadowMapRenderer.render(objectRenderers, sun);
+        shadowMapRenderer.render(modelComponents, animatedModelComponents, sun);
     }
 
     public int getShadowMaptexture() {

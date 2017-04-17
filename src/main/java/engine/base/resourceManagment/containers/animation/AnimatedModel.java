@@ -4,7 +4,7 @@ import engine.base.resourceManagment.containers.model.Mesh;
 import engine.base.resourceManagment.containers.texture.Texture;
 import org.lwjgl.util.vector.Matrix4f;
 
-public class AnimatedModel {
+public class AnimatedModel{
 
 	// skin
 	private final Mesh model;

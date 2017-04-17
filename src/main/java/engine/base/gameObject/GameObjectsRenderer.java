@@ -1,7 +1,7 @@
 package engine.base.gameObject;
 
 import engine.base.MasterRenderer;
-import engine.base.gameObject.gameObjectComponents.MeshRendererComponent;
+import engine.base.gameObject.gameObjectComponents.ModelComponent;
 import engine.base.resourceManagment.containers.model.Mesh;
 import engine.base.resourceManagment.containers.model.Model;
 import engine.base.resourceManagment.containers.texture.Texture;
@@ -27,12 +27,12 @@ public class GameObjectsRenderer {
         shader.stop();
     }
 
-    public void render(Map<Model, List<MeshRendererComponent>> renderers, Matrix4f toShadowSpace) {
+    public void render(Map<Model, List<ModelComponent>> renderers, Matrix4f toShadowSpace) {
         shader.loadToShadowSpaceMatrix(toShadowSpace);
         for (Model model : renderers.keySet()) {
             prepareTexturedModel(model);
-            List<MeshRendererComponent> batch = renderers.get(model);
-            for (MeshRendererComponent renderer : batch) {
+            List<ModelComponent> batch = renderers.get(model);
+            for (ModelComponent renderer : batch) {
                 prepareInstance(renderer);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                         GL11.GL_UNSIGNED_INT, 0);
@@ -64,7 +64,7 @@ public class GameObjectsRenderer {
         GL30.glBindVertexArray(0);
     }
 
-    private void prepareInstance(MeshRendererComponent renderer) {
+    private void prepareInstance(ModelComponent renderer) {
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(renderer.getGameObject().getPosition(),
                 renderer.getGameObject().getRotation().getX(),
                 renderer.getGameObject().getRotation().getY(),
@@ -72,7 +72,7 @@ public class GameObjectsRenderer {
                 renderer.getGameObject().getScale());
         shader.loadTransformationMatrix(transformationMatrix);
         shader.loadOffset(renderer.getTextureXOffset(), renderer.getTextureYOffset());
-        shader.loadNumberOfRows(renderer.getTexture().getNumberOfRows());
+        shader.loadNumberOfRows(renderer.getModel().getNumberOfRows());
     }
 
 }

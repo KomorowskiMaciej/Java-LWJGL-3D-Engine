@@ -6,12 +6,16 @@ import engine.base.resourceManagment.containers.model.Model;
 /**
  * Created by Maciek on 12.07.2016.
  */
-public class MeshRendererComponent extends GameObjectComponent {
+public class ModelComponent extends GameObjectComponent {
 
     private Model model;
     private int textureIndex = 0;
 
-    public MeshRendererComponent(Model model, int textureIndex) {
+    public ModelComponent(Model model) {
+        this.model = model;
+    }
+
+    public ModelComponent(Model model, int textureIndex) {
         this.model = model;
         this.textureIndex = textureIndex;
     }
@@ -39,10 +43,10 @@ public class MeshRendererComponent extends GameObjectComponent {
     }
 
     public void render() {
-        MasterRenderer.getInstance().processObjectRenderer(this);
+        MasterRenderer.getInstance().processModelRenderer(this);
     }
 
-    public Model getTexture() {
+    public Model getModel() {
         return model;
     }
 }

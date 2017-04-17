@@ -40,7 +40,12 @@ public class TestGame extends Game {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     public ConcurrentLinkedQueue<NetworkEvent> queue = new ConcurrentLinkedQueue<>();
     private HashMap<String, GameObject> players = new HashMap<>();
-    Model playerModel = null;
+
+    private Model playerModel = null;
+    private AnimatedModel animatedPlayerModel = null;
+    private Animation runAnimation;
+    private Animation idleAnimation;
+
     private GameObject player = null;
     private boolean isMultiplayer = false;
 
@@ -57,30 +62,23 @@ public class TestGame extends Game {
         // CAMERA
         setUpFirstPersonCamera(player);
         // MULTIPLAYER
-      //  setUpMultiplayer();
+        setUpMultiplayer();
 
-    //    OpenGlUtils.goWireframe(true);
+    //    OpenGlUtils.goWireframe(true)
 
-
-        AnimatedModel entity = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"),
-                new ResourceFile("res/textures/animatedModel.png"));
-        Animation animation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/model2.dae"));
-        entity.doAnimation(animation);
-        setAnimatedModel(entity);
-
-        GameObject testObject = new GameObject(new Vector3f(405,-10, 400),new Vector3f(0,0,0),new Vector3f(5,5, 5));
-        testObject.AddComponent(new MeshRendererComponent(playerModel, 1));
-        gameObjects.add(testObject);
+//        GameObject testObject = new GameObject(new Vector3f(405,-10, 400),new Vector3f(0,0,0),new Vector3f(5,5, 5));
+//        testObject.AddComponent(new ModelComponent(playerModel));
+//        gameObjects.add(testObject);
+//
+//        GameObject test2Object = new GameObject(new Vector3f(400,-10, 400),new Vector3f(0,0,0),new Vector3f(1,1, 1));
+//        test2Object.AddComponent(new AnimatedModelComponent(animatedPlayerModel));
+//        gameObjects.add(test2Object);
+//        animatedPlayerModel.doAnimation(runAnimation);
     }
 
     public void update() {
         if (isMultiplayer)
             updateMultiplayer();
-
-        for (AnimatedModel model: getAnimatedModels()) {
-            model.update();
-        }
-
     }
 
     private void updateMultiplayer() {
@@ -92,10 +90,19 @@ public class TestGame extends Game {
             switch (event.Type) {
                 case Constants.OpCode.USER_STATE: {
                     GamePackage state = (GamePackage) event.Data;
-                    if(!state.getUserID().equals(playerUserID) &&state.getPosition() != null){
+                    if(!state.getUserID().equals(playerUserID) && state.getPosition() != null){
 
                         if (players.containsKey(state.getUserID())) {
                             GameObject go = players.get(state.getUserID());
+                            if(go.getPosition().equals(state.getPosition())){
+                                // todo: do poprawienia
+                                AnimatedModelComponent component = go.getComponent(AnimatedModelComponent.class);
+                                component.getModel().doAnimation(idleAnimation);
+                            } else {
+                                AnimatedModelComponent component = go.getComponent(AnimatedModelComponent.class);
+                                component.getModel().doAnimation(runAnimation);
+                            }
+
                             go.setPosition(new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z));
                             go.setRotation(new Vector3f(state.getRotation().x, state.getRotation().y, state.getRotation().z));
                         } else {
@@ -132,8 +139,9 @@ public class TestGame extends Game {
     }
 
     public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {
-        GameObject p = new GameObject(position, rotation, new Vector3f(5, 5, 5));
-        p.AddComponent(new MeshRendererComponent(playerModel, 0));
+        GameObject p = new GameObject(position, rotation, new Vector3f(1, 1, 1));
+        p.AddComponent(new AnimatedModelComponent(animatedPlayerModel));
+        animatedPlayerModel.doAnimation(idleAnimation);
         gameObjects.add(p);
         return p;
     }
@@ -180,7 +188,7 @@ private String playerUserID = null;
         PhysicsComponent physicsComponent = new PhysicsComponent();
         player.AddComponent(physicsComponent);
         if (renderMesh)
-            player.AddComponent(new MeshRendererComponent(playerModel, 0));
+            player.AddComponent(new ModelComponent(playerModel, 0));
         gameObjects.add(player);
         player.AddComponent(new FirstPersonMovementComponent(physicsComponent));
         player.AddComponent(new PlayerComponent());
@@ -209,6 +217,9 @@ private String playerUserID = null;
 
     private void setUpModelsAndTextures() {
         playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(false);
+        animatedPlayerModel = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"),  new ResourceFile("res/textures/animatedModel.png"));
+        runAnimation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/model2.dae"));
+        idleAnimation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/idleAnimation.dae"));
     }
 
     private void setUpTerrain() {

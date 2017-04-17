@@ -18,6 +18,8 @@ public class Animator {
 	}
 
 	public void doAnimation(Animation animation) {
+		if(animation.equals(currentAnimation))
+			return;
 		this.animationTime = 0;
 		this.currentAnimation = animation;
 	}

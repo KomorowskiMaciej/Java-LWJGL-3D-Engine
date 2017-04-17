@@ -1,7 +1,9 @@
 package engine.base.shadows;
 
 import engine.base.Game;
-import engine.base.gameObject.gameObjectComponents.MeshRendererComponent;
+import engine.base.gameObject.gameObjectComponents.AnimatedModelComponent;
+import engine.base.gameObject.gameObjectComponents.ModelComponent;
+import engine.base.resourceManagment.containers.animation.AnimatedModel;
 import engine.modules.light.Light;
 import engine.base.resourceManagment.containers.model.Model;
 import engine.settings.Config;
@@ -39,12 +41,13 @@ public class ShadowMapMasterRenderer {
         return offset;
     }
 
-    public void render(Map<Model, List<MeshRendererComponent>> entities, Light sun) {
+    public void render(Map<Model, List<ModelComponent>> models,List<AnimatedModelComponent> animatedModels, Light sun) {
         shadowBox.update();
         Vector3f sunPosition = sun.getPosition();
         Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
         prepare(lightDirection, shadowBox);
-        gameObjectsRenderer.render(entities);
+        gameObjectsRenderer.render(models);
+        // TODO: cienie dla anumowanych modeli
         finish();
     }
 

@@ -1,7 +1,12 @@
 package engine.modules.animation.renderer;
 
+import engine.base.gameObject.gameObjectComponents.AnimatedModelComponent;
 import engine.base.resourceManagment.containers.animation.AnimatedModel;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
+
+import java.util.List;
+import java.util.Map;
 
 public class AnimatedModelRenderer {
 

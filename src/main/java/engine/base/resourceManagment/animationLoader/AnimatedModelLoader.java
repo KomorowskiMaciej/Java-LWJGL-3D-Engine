@@ -11,6 +11,8 @@ import engine.base.resourceManagment.colladaParser.dataStructures.SkeletonData;
 import engine.base.resourceManagment.containers.model.Mesh;
 import engine.base.resourceManagment.containers.file.ResourceFile;
 
+import static engine.toolbox.Utils.createJoints;
+
 public class AnimatedModelLoader {
 
 	public static AnimatedModel loadEntity(ResourceFile modelFile, ResourceFile textureFile) {
@@ -19,20 +21,12 @@ public class AnimatedModelLoader {
 		Texture texture = loadTexture(textureFile);
 		SkeletonData skeletonData = entityData.getJointsData();
 		Joint headJoint = createJoints(skeletonData.headJoint);
-		return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount);
+		return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount, skeletonData);
 	}
 
 	private static Texture loadTexture(ResourceFile textureFile) {
 		Texture diffuseTexture = Texture.newTexture(textureFile).anisotropic().create();
 		return diffuseTexture;
-	}
-
-	private static Joint createJoints(JointData data) {
-		Joint joint = new Joint(data.index, data.nameId, data.bindLocalTransform);
-		for (JointData child : data.children) {
-			joint.addChild(createJoints(child));
-		}
-		return joint;
 	}
 
 	private static Mesh createVao(MeshData data) {

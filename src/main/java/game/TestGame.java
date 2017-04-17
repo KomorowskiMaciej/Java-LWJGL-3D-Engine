@@ -62,7 +62,7 @@ public class TestGame extends Game {
         // CAMERA
         setUpFirstPersonCamera(player);
         // MULTIPLAYER
-        setUpMultiplayer();
+    //    setUpMultiplayer();
 
     //    OpenGlUtils.goWireframe(true)
 
@@ -140,7 +140,7 @@ public class TestGame extends Game {
 
     public GameObject createExternalPlayer(Vector3f position, Vector3f rotation) {
         GameObject p = new GameObject(position, rotation, new Vector3f(1, 1, 1));
-        p.AddComponent(new AnimatedModelComponent(animatedPlayerModel));
+        p.AddComponent(new AnimatedModelComponent(animatedPlayerModel.cloneAnimatedModel()));
         animatedPlayerModel.doAnimation(idleAnimation);
         gameObjects.add(p);
         return p;

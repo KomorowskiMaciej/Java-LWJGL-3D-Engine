@@ -1,5 +1,8 @@
 package engine.toolbox;
 
+import engine.base.resourceManagment.colladaParser.dataStructures.JointData;
+import engine.base.resourceManagment.containers.animation.Joint;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,5 +59,13 @@ public class Utils {
             result = false;
         }
         return result;
+    }
+
+    public static Joint createJoints(JointData data) {
+        Joint joint = new Joint(data.index, data.nameId, data.bindLocalTransform);
+        for (JointData child : data.children) {
+            joint.addChild(createJoints(child));
+        }
+        return joint;
     }
 }

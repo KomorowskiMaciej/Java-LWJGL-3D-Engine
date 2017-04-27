@@ -1,11 +1,14 @@
 package engine.modules.network;
 
+/**
+* @author Dominik Kinal <kinaldominik@gmail.com>
+*/
 public class NetworkEvent<T> {
-    public int Type;
-    public T Data;
+    public int type;
+    public T data;
 
-    public NetworkEvent(int type, T data) {
-        this.Type = type;
-        this.Data = data;
+    NetworkEvent(int type, T data) {
+        this.type = type;
+        this.data = data;
     }
 }

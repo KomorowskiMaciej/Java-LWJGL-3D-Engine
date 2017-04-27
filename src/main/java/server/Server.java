@@ -22,7 +22,7 @@ class Server {
 
     private Logger logger = Logger.getLogger(Server.class.getCanonicalName());
     private ConcurrentHashMap<String, ServerGameObject> serverGameObjects = new ConcurrentHashMap<>();
-    public ConcurrentLinkedQueue<GamePackage> incomingInfoQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<GamePackage> incomingInfoQueue = new ConcurrentLinkedQueue<>();
     private ScheduledExecutorService broadcastingExecutor = Executors.newScheduledThreadPool(1);
 
     void listenOn(int port) throws IOException {
@@ -74,7 +74,7 @@ class Server {
                     }
             }
         } catch (ClassNotFoundException | IOException e){
-
+            e.printStackTrace();
         }
     }
 

@@ -29,11 +29,7 @@ public class TextMaster {
         TextMeshData data = font.loadText(text);
         int vao = Loader.getInstance().loadToVAO(data.getVertexPositions(), data.getTextureCoords());
         text.setMeshInfo(vao, data.getVertexCount());
-        List<GUIText> textBatch = texts.get(font);
-        if (textBatch == null) {
-            textBatch = new ArrayList<GUIText>();
-            texts.put(font, textBatch);
-        }
+        List<GUIText> textBatch = texts.computeIfAbsent(font, k -> new ArrayList<>());
         textBatch.add(text);
     }
 
@@ -43,6 +39,11 @@ public class TextMaster {
         if (textBatch.isEmpty()) {
             texts.remove(texts.get(text.getFont()));
         }
+    }
+
+    public static void refreshText(GUIText text) {
+        removeText(text);
+        loadText(text);
     }
 
     public static void cleanUp() {

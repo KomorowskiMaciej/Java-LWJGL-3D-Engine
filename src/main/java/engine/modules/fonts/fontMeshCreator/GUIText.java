@@ -80,6 +80,17 @@ public class GUIText {
     }
 
     /**
+     * Set the printed text.
+     * @param txt new text to set
+     * @return this
+     */
+    public GUIText setText(String txt) {
+        this.textString = txt;
+        TextMaster.refreshText(this);
+        return this;
+    }
+
+    /**
      * @return the colour of the text.
      */
     public Vector3f getColour() {

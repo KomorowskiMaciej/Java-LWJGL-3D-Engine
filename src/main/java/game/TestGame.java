@@ -1,23 +1,24 @@
 package game;
 
+import com.google.gson.Gson;
 import engine.base.Game;
-import engine.base.resourceManagment.containers.animation.AnimatedModel;
-import engine.base.resourceManagment.containers.animation.Animation;
-import engine.base.resourceManagment.animationLoader.AnimatedModelLoader;
-import engine.base.resourceManagment.animationLoader.AnimationLoader;
 import engine.base.gameObject.GameObject;
 import engine.base.gameObject.gameObjectComponents.*;
-import engine.modules.fonts.fontMeshCreator.FontType;
-import engine.modules.fonts.fontMeshCreator.GUIText;
-import engine.modules.light.Light;
 import engine.base.resourceManagment.Loader;
-import engine.base.resourceManagment.objParser.OBJLoader;
+import engine.base.resourceManagment.animationLoader.AnimatedModelLoader;
+import engine.base.resourceManagment.animationLoader.AnimationLoader;
+import engine.base.resourceManagment.containers.animation.AnimatedModel;
+import engine.base.resourceManagment.containers.animation.Animation;
+import engine.base.resourceManagment.containers.file.ResourceFile;
 import engine.base.resourceManagment.containers.model.Model;
 import engine.base.resourceManagment.containers.texture.TerrainTexture;
 import engine.base.resourceManagment.containers.texture.TerrainTexturePack;
 import engine.base.resourceManagment.containers.texture.Texture;
+import engine.base.resourceManagment.objParser.OBJLoader;
+import engine.modules.fonts.fontMeshCreator.FontType;
+import engine.modules.fonts.fontMeshCreator.GUIText;
+import engine.modules.light.Light;
 import engine.modules.network.*;
-import engine.base.resourceManagment.containers.file.ResourceFile;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import server.Constants;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import static server.Constants.USE_UDP_WHERE_POSSIBLE;
 
 /**
  * Created by Maciek on 12.07.2016.
@@ -73,12 +75,13 @@ public class TestGame extends Game {
         setUpFirstPersonCamera(player);
         // MULTIPLAYER
         setUpMultiplayer();
+
         verdana = new FontType(Loader.getInstance().loadFontTexture("verdana"), new File("res/fonts/verdana.fnt"));
 
-        packagesSentPerSecondText = new GUIText("Offline",1.0f, verdana, new Vector2f(0.45f, 0.96f), 1f, true).setColour(1, 1, 1);
-        packagesReceivedPerSecondText = new GUIText("Offline",1.0f, verdana, new Vector2f(0.45f, 0.92f), 1f, true).setColour(1, 1, 1);
+        packagesSentPerSecondText = new GUIText("Offline", 1.0f, verdana, new Vector2f(0.45f, 0.96f), 1f, true).setColour(1, 1, 1);
+        packagesReceivedPerSecondText = new GUIText("Offline", 1.0f, verdana, new Vector2f(0.45f, 0.92f), 1f, true).setColour(1, 1, 1);
 
-    //    OpenGlUtils.goWireframe(true)
+        //    OpenGlUtils.goWireframe(true)
 
 //        GameObject testObject = new GameObject(new Vector3f(405,-10, 400),new Vector3f(0,0,0),new Vector3f(5,5, 5));
 //        testObject.AddComponent(new ModelComponent(playerModel));
@@ -103,17 +106,17 @@ public class TestGame extends Game {
         packagesReceivedPerSecondText.setText("Recv: " + df.format(MonitorThread.packagesReceivedPerSecond) + "/s");
 
         // WYKONYWANIE POLECEN SERWERA
-            while (queue.size() > 0) {
-                NetworkEvent event = queue.poll();
+        while (queue.size() > 0) {
+            NetworkEvent event = queue.poll();
 
             switch (event.type) {
                 case Constants.OpCode.USER_STATE: {
                     GamePackage state = (GamePackage) event.data;
-                    if(!state.getUserID().equals(playerUserID) && state.getPosition() != null){
+                    if (!state.getUserID().equals(playerUserID) && state.getPosition() != null) {
 
                         if (players.containsKey(state.getUserID())) {
                             GameObject go = players.get(state.getUserID());
-                            if(go.getPosition().equals(state.getPosition())){
+                            if (go.getPosition().equals(state.getPosition())) {
                                 // todo: do poprawienia
                                 AnimatedModelComponent component = go.getComponent(AnimatedModelComponent.class);
                                 component.getModel().doAnimation(idleAnimation);
@@ -125,7 +128,7 @@ public class TestGame extends Game {
                             go.setPosition(new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z));
                             go.setRotation(new Vector3f(state.getRotation().x, state.getRotation().y, state.getRotation().z));
                         } else {
-                            players.put(state.getUserID(),createExternalPlayer(
+                            players.put(state.getUserID(), createExternalPlayer(
                                     new Vector3f(state.getPosition().x, state.getPosition().y, state.getPosition().z),
                                     new Vector3f(state.getRotation().x, state.getRotation().y, state.getRotation().z)
                                     )
@@ -136,8 +139,8 @@ public class TestGame extends Game {
                 }
                 case Constants.OpCode.USER_LOGOUT: {
                     GamePackage state = (GamePackage) event.data;
-                    if(!state.getUserID().equals(playerUserID)){
-                       deleteExternalPlayer(playerUserID);
+                    if (!state.getUserID().equals(playerUserID)) {
+                        deleteExternalPlayer(playerUserID);
                     }
                     break;
                 }
@@ -164,8 +167,8 @@ public class TestGame extends Game {
         return p;
     }
 
-    private void deleteExternalPlayer(String UserID){
-        if(players.containsKey(UserID)){
+    private void deleteExternalPlayer(String UserID) {
+        if (players.containsKey(UserID)) {
             gameObjects.remove(players.get(UserID));
             players.remove(UserID);
         }
@@ -181,8 +184,8 @@ public class TestGame extends Game {
         player.setRotation(state.getRotation());
         playerUserID = state.getUserID();
 
-       PlayerComponent c = player.getComponent(PlayerComponent.class);
-       if (c == null)
+        PlayerComponent c = player.getComponent(PlayerComponent.class);
+        if (c == null)
             throw new IllegalStateException("FirstPersonMovementComponent hasnt found in player object");
         c.setHp(state.getHp());
     }
@@ -199,10 +202,35 @@ public class TestGame extends Game {
             monitorExecutorService.submit(monitorThread);
 
             login(out, in); // synchronous process -> block thread until successfully log in
-            executorService.submit(new ReceiverThread(in, queue, monitorThread)); // Start listening for server's userStates broadcasting
+            if(Constants.USE_UDP_WHERE_POSSIBLE)
+                executorService.submit(new MulticastReceiverTask(queue, monitorThread)); // Start listening for server's userStates broadcasting
+            else
+                executorService.submit(new ReceiverThread(in, queue, monitorThread)); // Start listening for server's userStates broadcasting
+            
+            
+            
             isMultiplayer = true;
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
+        Sender.send(out, new GamePackage(Constants.OpCode.USER_LOGIN));
+
+        try {
+            GamePackage returnLoginPackage = (GamePackage) in.readObject();
+
+            if (returnLoginPackage.getOpCode() != Constants.OpCode.USER_LOGIN)
+                throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", returnLoginPackage.getOpCode()));
+
+            if (returnLoginPackage.getRotation() == null || returnLoginPackage.getRotation() == null)
+                throw new FailedLoginException("Login return package have null required fields!");
+
+            setPlayerStartStates(returnLoginPackage);
+            System.out.println("Logged in");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -218,29 +246,10 @@ public class TestGame extends Game {
         player.AddComponent(new PlayerComponent());
     }
 
-    private void login(ObjectOutputStream out, ObjectInputStream in) throws IOException {
-        Sender.send(out, new GamePackage(Constants.OpCode.USER_LOGIN));
-
-        try {
-            GamePackage returnLoginPackage = (GamePackage) in.readObject();
-
-            if(returnLoginPackage.getOpCode() != Constants.OpCode.USER_LOGIN)
-                throw new FailedLoginException(String.format("Received wrong opcode [%d] during login process", returnLoginPackage.getOpCode()));
-
-            if(returnLoginPackage.getRotation() == null || returnLoginPackage.getRotation() == null)
-                throw new FailedLoginException("Login return package have null required fields!");
-
-            setPlayerStartStates(returnLoginPackage);
-            System.out.println("Logged in");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void setUpModelsAndTextures() {
         playerModel = new Model(OBJLoader.loadOBJ("lumberJack"), new Texture(Loader.getInstance().loadTexture("lumberJack_diffuse"))).setDisableCulling(false);
-        animatedPlayerModel = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"),  new ResourceFile("res/textures/animatedModel.png"));
+        animatedPlayerModel = AnimatedModelLoader.loadEntity(new ResourceFile("res/dae/model2.dae"), new ResourceFile("res/textures/animatedModel.png"));
         runAnimation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/model2.dae"));
         idleAnimation = AnimationLoader.loadAnimation(new ResourceFile("res/dae/idleAnimation.dae"));
     }
@@ -263,6 +272,6 @@ public class TestGame extends Game {
 
     private void setUpLights() {
         setLight(new Light(new Vector3f(1000000, 10000000, 1000000), new Vector3f(1f, 1f, 1f)));
-      //  setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+        //  setLight(new Light(new Vector3f(400, -4.7f, 400), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
     }
 }

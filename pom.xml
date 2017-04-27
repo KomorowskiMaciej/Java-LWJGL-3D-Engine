@@ -31,6 +31,13 @@
             <artifactId>slick2d-core</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+
     </dependencies>
 
 
@@ -42,6 +49,14 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <argLine>-Djava.net.preferIPv4Stack=true</argLine>
                 </configuration>
             </plugin>
         </plugins>

@@ -5,11 +5,10 @@ import org.lwjgl.LWJGLUtil;
 
 import java.io.File;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * Created by Maciek on 12.07.2016.
+ * MacOS require JVM Config to work with MultiCast Datagrams
+ * -Djava.net.preferIPv4Stack=true
  */
 public class GameLauncher {
     public static void main(String[] args) {

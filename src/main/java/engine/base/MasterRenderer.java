@@ -71,6 +71,7 @@ public class MasterRenderer {
     private GameObjectShader gameObjectshader = new GameObjectShader();
     private GameObjectsRenderer gameObjectsRenderer;
     private AnimatedModelRenderer animatedModelRenderer;
+    AnimatedModelShader animatedModelShader = new AnimatedModelShader();
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
     private SkyboxRenderer skyboxRenderer;
@@ -137,8 +138,6 @@ public class MasterRenderer {
         gameObjectsRenderer.render(modelComponents, shadowMapRenderer.getToShadowMapSpaceMatrix());
         gameObjectshader.stop();
 
-
-        AnimatedModelShader animatedModelShader = new AnimatedModelShader();
         animatedModelShader.start();
         animatedModelShader.setProjectionMatrix(projectionMatrix);
         animatedModelShader.setViewMatrix(Maths.createViewMatrix(Game.getCamera()));

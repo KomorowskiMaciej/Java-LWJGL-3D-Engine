@@ -189,7 +189,8 @@ public class TestGame extends Game {
 
     private void setUpMultiplayer() {
         try {
-            Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
+            InetAddress address = InetAddress.getByName(GameLauncher.IP);
+            Socket socket = new Socket(address, 1234);
             out = new ObjectOutputStream(socket.getOutputStream()); // TODO: Dodać usunięcie do destruktora
             in = new ObjectInputStream(socket.getInputStream());
 
